@@ -33,6 +33,7 @@ public class SerialPortManager implements Runnable, SerialPortEventListener {
 	
 	private volatile boolean isConnected;
 	private volatile boolean isDestroyed;
+	private volatile Thread thread = null;
 	
 	@Inject
 	public SerialPortManager(Logger log, EventBus eb) {
@@ -45,14 +46,17 @@ public class SerialPortManager implements Runnable, SerialPortEventListener {
 		isDestroyed = false;
 		serialPort = new SerialPort("/dev/ttyAMA0");  //  COM1
 		connect(); 
-		new Thread(this).start();
+		thread = new Thread(this);
+		thread.start();
 	}
 	
 	public void destroy() {
 		isDestroyed = true;
 		disconnect();
-		log.info("link manager destroyed");
+		if (thread!=null) thread.interrupt();
+		log.info("");
 	}
+
 
 	public void listPorts() {
         String[] portNames = SerialPortList.getPortNames();
@@ -73,8 +77,9 @@ public class SerialPortManager implements Runnable, SerialPortEventListener {
 		++timerCount;
 //		System.out.println("*");
 		if (!isDestroyed) {
-			new Thread(this).start();
-		}		
+			thread = new Thread(this);
+			thread.start();
+		}
 	}
 
 	public void run_OLD() {

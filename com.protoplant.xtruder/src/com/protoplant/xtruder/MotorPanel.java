@@ -23,32 +23,29 @@ import com.google.inject.Injector;
 
 public class MotorPanel extends Group {
 	
-	private Logger log;
-	private EventBus eb;
-	private StSmc st;
+	protected Logger log;
+	protected EventBus eb;
+	protected StSmc st;
 	
-	private Button btnStop;
-	private Button btnRun;
-	private Label lblSpeed;
-	private boolean isFocused = false;
-	private String label;
+	protected Button btnStop;
+	protected Button btnRun;
+	protected Label lblSpeed;
+	protected boolean isFocused = false;
+	protected String label;
 
 
-	private RGB focusColor = new RGB(180, 200, 220);
-	private RGB stopColor = new RGB(220, 180, 180);
-	private RGB runColor = new RGB(180, 220, 180);
+	protected RGB focusColor = new RGB(180, 200, 220);
+	protected RGB stopColor = new RGB(220, 180, 180);
+	protected RGB runColor = new RGB(180, 220, 180);
 	
-	private boolean isRunning = false;
-	private int speedMotorUnits = 0;
-	private int maxSpeedMotorUnits = 150000;
-	private float speed = 0;
-	private float speedScaleFactor = 1000;
-//	private float speedScaleDelta = 0.000
+	protected boolean isRunning = false;
+	protected int speedMotorUnits = 0;
+	protected int maxSpeedMotorUnits = 150000;
+	protected float speed = 0;
+	protected float speedScaleFactor = 1000;
 
-	private int boardIndex;
-	private XtruderConfig config;
-
-	
+	protected int boardIndex;
+	protected XtruderConfig config;
 	
 	
 	public MotorPanel(Composite parent, Injector injector, int boardIndex, String label) {
@@ -96,7 +93,7 @@ public class MotorPanel extends Group {
 		btnRun.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				run();
+				start();
 			}
 		});
 		btnRun.setBounds(111, 33, 75, 51);
@@ -186,11 +183,15 @@ public class MotorPanel extends Group {
 				speed=speedMotorUnits/speedScaleFactor;
 			}
 			lblSpeed.setText(String.format("%.4f", speed));
-			if (isRunning) {
-				st.setCurBoardIndex(boardIndex);
-				st.run(speedMotorUnits);
-			}
+			setMotorSpeed();
 			if (sendChangeEvent) eb.post(new MotorStateChangeEvent(this, MotorState.SPEED));
+		}
+	}
+	
+	public void setMotorSpeed() {
+		if (isRunning) {
+			st.setCurBoardIndex(boardIndex);
+			st.run(speedMotorUnits);
 		}
 	}
 	
@@ -198,16 +199,20 @@ public class MotorPanel extends Group {
 		return speed;
 	}
 	
-	public void run() {
-		run(true);
+	public void start() {
+		start(true);
 	}
 	
-	public void run(boolean sendChangeEvent) {
+	public void start(boolean sendChangeEvent) {
 		isRunning = true;
 		lblSpeed.setBackground(SWTResourceManager.getColor(runColor));
+		startMotor();
+		if (sendChangeEvent) eb.post(new MotorStateChangeEvent(this, MotorState.RUN));
+	}
+	
+	public void startMotor() {
 		st.setCurBoardIndex(boardIndex);
 		st.run(speedMotorUnits);
-		if (sendChangeEvent) eb.post(new MotorStateChangeEvent(this, MotorState.RUN));
 	}
 	
 	public void stop() {
@@ -217,10 +222,14 @@ public class MotorPanel extends Group {
 	public void stop(boolean sendChangeEvent) {
 		isRunning = false;
 		lblSpeed.setBackground(SWTResourceManager.getColor(stopColor));
+		stopMotor();
+		if (sendChangeEvent) eb.post(new MotorStateChangeEvent(this, MotorState.STOP));
+	}
+	
+	public void stopMotor() {
 		st.setCurBoardIndex(boardIndex);
 		st.hiZ();
 //		st.hold();
-		if (sendChangeEvent) eb.post(new MotorStateChangeEvent(this, MotorState.STOP));
 	}
 
 	@Override

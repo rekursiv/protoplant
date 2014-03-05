@@ -10,6 +10,7 @@ import com.google.inject.Singleton;
 import com.pi4j.wiringpi.Gpio;
 import com.pi4j.wiringpi.Spi;
 
+// boards from eBay are based on ST L6472
 
 @Singleton
 public class StSmc {
@@ -68,7 +69,7 @@ public class StSmc {
 		for (curBoardIndex=0; curBoardIndex<numBoards; ++curBoardIndex) {
 			resetDevice();
 			setDefaults();
-			dumpStatus();  // resets all error flags
+			resetErrorFlags();
 		}
 		curBoardIndex = 0;
 		fixBrokenL6482();
@@ -95,24 +96,24 @@ public class StSmc {
 		sendByte(threshold);
 	}
 	
-	private void setStepMode(int stepMode) {
+	public void setStepMode(int stepMode) {
 		sendByte(0x16);
 		sendByte(stepMode);
 	}
 	
-	private void setMaxSpeed(int speed) {
+	public void setMaxSpeed(int speed) {
 		sendByte(0x07);
 		sendByte(speed>>8);
 		sendByte(speed);
 	}
 	
-	private void setAccel(int rate) {
+	public void setAccel(int rate) {
 		sendByte(0x05);
 		sendByte(rate>>8);
 		sendByte(rate);
 	}
 	
-	private void setDecel(int rate) {
+	public void setDecel(int rate) {
 		sendByte(0x06);
 		sendByte(rate>>8);
 		sendByte(rate);
@@ -130,12 +131,23 @@ public class StSmc {
 		sendByte(moveTorque);
 	}
 	
-	public void dumpStatus() {
-		sendByte(0xD0);
-		getReply();
-		getReply();
+	public void resetErrorFlags() {
+		sendByte(0xD0);  // "get status" command resets all error flags
 	}
 	
+	public void dumpStatus() {
+		sendByte(0xD0);
+		log.info("[REPLY1] " + toBinary(getReply()));
+		log.info("[REPLY2] " + toBinary(getReply()));
+	}
+	
+	public ArrayList<Integer> getStatus() {
+		ArrayList<Integer> bytes = new ArrayList<Integer>();
+		sendByte(0xD0);
+		bytes.add(getReply());
+		bytes.add(getReply());
+		return bytes;
+	}
 	
 	private void fixBrokenL6482() {
 		// set OCD_SD=0 in CONFIG (force bridge to stay on after over current detect)
@@ -191,7 +203,6 @@ public class StSmc {
 		for (int i=0; i<(numBoards-curBoardIndex); ++i) pkt.add(0);
 		writeSpi(pkt);
 		int reply = pkt.get((numBoards-curBoardIndex)-1);
-//		log.info("[REPLY] " + toBinary(reply));
 		return reply;
 	}	
 	

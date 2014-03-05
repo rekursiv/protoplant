@@ -18,6 +18,7 @@ public class XtruderApp {
 		XtruderApp instance = new XtruderApp();
 		instance.init();
 //		instance.test();
+		System.out.println("Bye.");
 	}
 	
 	private static void runRemote() {
@@ -47,7 +48,7 @@ public class XtruderApp {
 		
 		// touchscreen is 1280 X 800
 		shell.setSize(1280, 800);
-		shell.setText("Protoplant Xtruder V1.0");
+		shell.setText("Protoplant Xtruder V1.1");
 		shell.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
 		Injector injector = Guice.createInjector(new XtruderModule());

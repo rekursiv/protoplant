@@ -15,13 +15,13 @@
     "speedInit" : 5.0,
     "speedScale" : 2890.0
   }, {
-    "speedInit" : 5.0,
+    "speedInit" : 9.0,
     "speedScale" : 2890.0
   }, {
-    "speedInit" : 5.0,
+    "speedInit" : 8.775,
     "speedScale" : 2890.0
   }, {
-    "speedInit" : 5.0,
+    "speedInit" : 8.775,
     "speedScale" : 2890.0
   }, {
     "speedInit" : 5.0,

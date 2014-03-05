@@ -123,7 +123,7 @@ public class LinkPanel extends Group {
 					calcRatio();
 				}
 			} else if (isLinked) {
-				if (event.getState()==MotorState.RUN) dstMotor.run();
+				if (event.getState()==MotorState.RUN) dstMotor.start();
 				else dstMotor.stop();
 			}
 		}

@@ -73,6 +73,8 @@ public class StepperatureInput implements GpioPinListenerDigital, Runnable {
 	
 	public void destroy() {
 		isActive  = false;
+		if (gpio!=null) gpio.shutdown();
+		log.info("");
 	}
 
 	

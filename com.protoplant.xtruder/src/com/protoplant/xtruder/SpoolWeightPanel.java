@@ -38,6 +38,8 @@ public class SpoolWeightPanel extends Group implements Runnable {
 	private volatile float grams=0;
 	
 	private volatile boolean isMotorRunning = false;
+	private volatile Thread thread = null;
+	
 	private Button rb250g;
 	private Button rb1kg;
 	private Button rbPcabs;
@@ -173,6 +175,11 @@ public class SpoolWeightPanel extends Group implements Runnable {
 		});
 	}
 	
+	public void destroy() {
+		isMotorRunning = false;
+		if (thread!=null) thread.interrupt();
+	}
+	
 	@Subscribe
 	public void onMotorSpeedChange(MotorStateChangeEvent event) {
 		if (event.getPanel()==refMotor) {
@@ -197,13 +204,15 @@ public class SpoolWeightPanel extends Group implements Runnable {
 		updateDisplay();
 		
 		if (isMotorRunning) {
-			new Thread(this).start();
+			thread = new Thread(this);
+			thread.start();
 		}
 	}
 	
 	public void start() {
 		isMotorRunning = true;
-		new Thread(this).start();
+		thread = new Thread(this);
+		thread.start();
 	}
 	
 	

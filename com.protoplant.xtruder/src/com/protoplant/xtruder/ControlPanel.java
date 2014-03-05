@@ -14,6 +14,8 @@ import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 
+import org.eclipse.wb.swt.SWTResourceManager;
+
 public class ControlPanel extends Composite {
 	private MotorPanel motor1;
 	private MotorPanel motor2;
@@ -21,7 +23,7 @@ public class ControlPanel extends Composite {
 	private MotorPanel motor3;
 	private MotorPanel motor4;
 	private LinkPanel linkMotor2_4;
-	private MotorPanel motor5;
+	private WinderMinderPanel winderMinder;
 	private SpoolWeightPanel spoolWeight;
 	
 	private Button btnStopAll;
@@ -36,6 +38,7 @@ public class ControlPanel extends Composite {
 	private Logger log;
 	private EventBus eb;
 	private StepperatureInput mpg;
+	private Button btnExit;
 
 
 
@@ -53,8 +56,8 @@ public class ControlPanel extends Composite {
 		motor4 = new MotorPanel(this, injector, 3, "Wheel #2");
 		motor4.setBounds(759, 121, 350, 105);
 		
-		motor5 = new MotorPanel(this, injector, 4, "Aux");
-		motor5.setBounds(10, 232, 350, 105);
+		winderMinder = new WinderMinderPanel(this, injector, 4, "Winder Minder");
+		winderMinder.setBounds(10, 232, 350, 105);
 		
 		linkMotor2_3 = new LinkPanel(this, injector, motor2, motor3);
 		linkMotor2_3.setBounds(386, 10, 350, 105);
@@ -78,12 +81,7 @@ public class ControlPanel extends Composite {
 		btnStopAll.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				motor1.stop(false);
-				motor2.stop(false);
-				motor3.stop(false);
-				motor4.stop(false);
-				motor5.stop(false);
-				spoolWeight.stop();
+				stopAll();
 			}
 		});
 		btnStopAll.setFont(SWTResourceManager.getFont("Segoe UI", 15, SWT.NORMAL));
@@ -94,12 +92,7 @@ public class ControlPanel extends Composite {
 		btnRunAll.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				motor1.run(false);
-				motor2.run(false);
-				motor3.run(false);
-				motor4.run(false);
-				motor5.run(false);
-				spoolWeight.start();
+				startAll();
 			}
 		});
 		btnRunAll.setFont(SWTResourceManager.getFont("Segoe UI", 15, SWT.NORMAL));
@@ -116,6 +109,21 @@ public class ControlPanel extends Composite {
 		btnReinitMotors.setText("Re-Init Motors");
 		btnReinitMotors.setFont(SWTResourceManager.getFont("Segoe UI", 15, SWT.NORMAL));
 		btnReinitMotors.setBounds(465, 463, 188, 58);
+
+		btnExit = new Button(this, SWT.NONE);
+		btnExit.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				stopAll();
+				winderMinder.destroy();
+				spoolWeight.destroy();
+				try {Thread.sleep(200);} catch (InterruptedException e) {}  // give things a chance to shut down
+				getShell().dispose();
+			}
+		});
+		btnExit.setText("Exit");
+		btnExit.setFont(SWTResourceManager.getFont("Segoe UI", 15, SWT.NORMAL));
+		btnExit.setBounds(921, 463, 188, 58);
 		
 		//  for testing without Stepperature
 		this.addMouseWheelListener(new MouseWheelListener() {
@@ -125,7 +133,7 @@ public class ControlPanel extends Composite {
 				mpg.simulateStep(evt.count);
 			}
 		});
-		
+
 		if (injector!=null) injector.injectMembers(this);
 	}
 	
@@ -136,6 +144,26 @@ public class ControlPanel extends Composite {
 		this.st = st;
 		this.mpg = mpg;
 	}
+
+	
+	public void startAll() {
+		motor1.start(false);
+		motor2.start(false);
+		motor3.start(false);
+		motor4.start(false);
+		winderMinder.start(false);
+		spoolWeight.start();
+	}
+	
+	public void stopAll() {
+		motor1.stop(false);
+		motor2.stop(false);
+		motor3.stop(false);
+		motor4.stop(false);
+		winderMinder.stop(false);
+		spoolWeight.stop();
+	}
+
 	
 	@Override
 	protected void checkSubclass() {
