@@ -222,6 +222,14 @@ public class StSmc {
     }
 	
     
+	public boolean isSwitchOn(ArrayList<Integer> bytes) {
+		return (bytes.get(1).intValue() & 0x04) != 0;
+	}
+	
+	public boolean isBusy(ArrayList<Integer> bytes) {
+		return (bytes.get(1).intValue() & 0x02) == 0;
+	}
+    
     //////////////////////    DEBUG    ////////////////////////////////
 	
 
