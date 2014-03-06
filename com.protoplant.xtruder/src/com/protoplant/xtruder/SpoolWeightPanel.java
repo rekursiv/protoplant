@@ -39,6 +39,7 @@ public class SpoolWeightPanel extends Group implements Runnable {
 	
 	private volatile boolean isMotorRunning = false;
 	private volatile Thread thread = null;
+	private volatile long prevStepTime = 0;
 	
 	private Button rb250g;
 	private Button rb1kg;
@@ -222,8 +223,12 @@ public class SpoolWeightPanel extends Group implements Runnable {
 	
 	private void updateDisplay() {
 		Display.getDefault().asyncExec(new Runnable() {
+
 			@Override
 			public void run() {
+				float delay = (System.currentTimeMillis()-prevStepTime)/1000.0f;
+				prevStepTime=System.currentTimeMillis();
+				if (delay>1) return;
 				float scale = 0;
 				if (rb175.getSelection()) {
 					if (rbPcabs.getSelection()) scale = config.pcabs175GramsPerInch;
@@ -234,7 +239,7 @@ public class SpoolWeightPanel extends Group implements Runnable {
 					else if (rbHtpla.getSelection()) scale = config.htpla3GramsPerInch;
 					else if (rbCfpla.getSelection()) scale = config.cfpla3GramsPerInch;
 				}
-				grams+=(refMotor.getSpeed()*scale)/100.0f;
+				grams+=(refMotor.getSpeed()*delay)*scale;
 				if (rb250g.getSelection()&&grams>250) grams=0;
 				else if (rb1kg.getSelection()&&grams>1000) grams=0;
 				lblData.setText(String.format("%.2f g", grams));

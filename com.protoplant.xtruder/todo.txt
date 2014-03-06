@@ -1,3 +1,20 @@
 
+winder minder:
+  set default speed = 3
+  cut slots in bracket
+  fix switch bounce issue on
+
+debug motor glitch issue
+
+
+---
+
+alarms/warnings - text to speech
+
+msp430 analog input to hopper sensor
+
+laser flaw detection
+
+
 
 
