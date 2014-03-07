@@ -1,11 +1,6 @@
 
 winder minder:
-  set default speed = 3
-  cut slots in bracket
-  test switch bounce issue
-
-test motor glitch issue (fixed?)
-
+  fix switch bounce issue
 
 ---
 
@@ -15,6 +10,7 @@ msp430 analog input to hopper sensor
 
 laser flaw detection
 
+---
 
 
 

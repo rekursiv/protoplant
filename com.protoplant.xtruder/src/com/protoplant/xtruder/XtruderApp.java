@@ -8,6 +8,7 @@ import org.eclipse.swt.layout.FillLayout;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.protoplant.xtruder.audio.AudioManager;
 
 public class XtruderApp {
 	
@@ -48,7 +49,7 @@ public class XtruderApp {
 		
 		// touchscreen is 1280 X 800
 		shell.setSize(1280, 800);
-		shell.setText("Protoplant Xtruder V1.1");
+		shell.setText("Protoplant Xtruder V1.2");
 		shell.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
 		Injector injector = Guice.createInjector(new XtruderModule());
@@ -57,6 +58,7 @@ public class XtruderApp {
 		
 		StepperatureInput mpg = injector.getInstance(StepperatureInput.class);
 		StSmc smc = injector.getInstance(StSmc.class);
+		AudioManager am = injector.getInstance(AudioManager.class);
 		smc.initSpi();
 		smc.initAllBoards();
 		SerialPortManager spm = injector.getInstance(SerialPortManager.class);
@@ -67,6 +69,7 @@ public class XtruderApp {
 		
 		mpg.destroy();
 		spm.destroy();
+		am.destroy();
 
 	}
 

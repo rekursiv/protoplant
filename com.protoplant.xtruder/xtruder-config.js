@@ -5,7 +5,7 @@
   "logToConsole" : true,
   "logToFile" : false,
   "showLogView" : true,
-  "pcabs175GramsPerInch" : 1.0,
+  "pcabs175GramsPerInch" : 0.1,
   "htpla175GramsPerInch" : 1.0,
   "cfpla175GramsPerInch" : 1.0,
   "pcabs3GramsPerInch" : 2.0,

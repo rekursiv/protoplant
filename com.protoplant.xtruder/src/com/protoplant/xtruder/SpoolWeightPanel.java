@@ -22,6 +22,7 @@ import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
+import com.protoplant.xtruder.audio.AudioManager;
 
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.FormLayout;
@@ -35,8 +36,9 @@ public class SpoolWeightPanel extends Group implements Runnable {
 	private Logger log;
 	private Label lblData;
 	private MotorPanel refMotor;
-	private volatile float grams=0;
 	
+	private volatile float grams=890;
+	private volatile float prevGrams=890;
 	private volatile boolean isMotorRunning = false;
 	private volatile Thread thread = null;
 	private volatile long prevStepTime = 0;
@@ -53,7 +55,8 @@ public class SpoolWeightPanel extends Group implements Runnable {
 	private Group grpDia;
 	private Button rb175;
 	private Button rb3;
-	
+	private AudioManager am;
+		
 	
 	public SpoolWeightPanel(Composite parent, Injector injector, MotorPanel refMotor) {
 		super(parent, SWT.NONE);
@@ -165,9 +168,10 @@ public class SpoolWeightPanel extends Group implements Runnable {
 	
 	
 	@Inject
-	public void inject(Logger log, XtruderConfig config) {
+	public void inject(Logger log, XtruderConfig config, AudioManager am) {
 		this.log = log;
 		this.config = config;
+		this.am = am;
 		this.addDisposeListener(new DisposeListener() {
 			@Override
 			public void widgetDisposed(DisposeEvent arg0) {
@@ -240,13 +244,47 @@ public class SpoolWeightPanel extends Group implements Runnable {
 					else if (rbCfpla.getSelection()) scale = config.cfpla3GramsPerInch;
 				}
 				grams+=(refMotor.getSpeed()*delay)*scale;
-				if (rb250g.getSelection()&&grams>250) grams=0;
-				else if (rb1kg.getSelection()&&grams>1000) grams=0;
+				if (rb250g.getSelection()) {
+					updateAudio250g();
+					if (grams>250) grams=0;
+				}
+				else if (rb1kg.getSelection()) {
+					updateAudio1kg();
+					if (grams>1000) grams=0;
+				}
 				lblData.setText(String.format("%.2f g", grams));
+				prevGrams = grams;
 			}
 		});
 	}
 	
+	private void updateAudio250g() {
+		if (checkpoint(200)) am.playClip("200g");
+		else if (checkpoint(240)) am.playClip("240g");
+		else if (checkpoint(245)) am.playClip("5");
+		else if (checkpoint(246)) am.playClip("4");
+		else if (checkpoint(247)) am.playClip("3");
+		else if (checkpoint(248)) am.playClip("2");
+		else if (checkpoint(249)) am.playClip("1");
+		else if (checkpoint(0)) am.playClip("mark");
+	}
+	
+	private void updateAudio1kg() {
+		if (checkpoint(900)) am.playClip("900g");
+		else if (checkpoint(990)) am.playClip("990g");
+		else if (checkpoint(995)) am.playClip("5");
+		else if (checkpoint(996)) am.playClip("4");
+		else if (checkpoint(997)) am.playClip("3");
+		else if (checkpoint(998)) am.playClip("2");
+		else if (checkpoint(999)) am.playClip("1");
+		else if (checkpoint(0)) am.playClip("mark");
+	}
+	
+	private boolean checkpoint(float ref) {
+		if (prevGrams<=ref && grams>=ref) return true;
+		else if (ref-0.0f<0.1 && grams<prevGrams) return true;
+		else return false;
+	}
 	
 	@Override
 	protected void checkSubclass() {
