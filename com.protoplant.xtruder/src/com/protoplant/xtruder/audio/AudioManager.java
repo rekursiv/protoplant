@@ -2,6 +2,7 @@ package com.protoplant.xtruder.audio;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.google.inject.Inject;
@@ -20,9 +21,9 @@ public class AudioManager {
 	}	
 	
 	public void init() {
-		addClip("200g");
+//		addClip("200g");  // won't fit in pi memory??
 		addClip("240g");
-		addClip("900g");
+//		addClip("900g");
 		addClip("990g");
 		addClip("5");
 		addClip("4");
@@ -33,7 +34,13 @@ public class AudioManager {
 	}
 	
 	public void addClip(String name) {
-		clipMap.put(name, new AudioClip(name+".wav"));
+		AudioClip clip = new AudioClip(name+".wav");
+		try {
+			clip.load();
+		} catch (Exception e) {
+			log.log(Level.WARNING, "Error loading clip: ", e);
+		}
+		clipMap.put(name, clip);
 	}
 	
 	public void destroy() {

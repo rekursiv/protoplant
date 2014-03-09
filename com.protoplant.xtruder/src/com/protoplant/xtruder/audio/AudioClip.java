@@ -17,11 +17,6 @@ public class AudioClip {
 	
 	public AudioClip(String fileName) {
 		this.fileName = fileName;
-		try {
-			load();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 	
 	public void load() throws Exception {

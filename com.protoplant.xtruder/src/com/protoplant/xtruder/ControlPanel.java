@@ -39,6 +39,7 @@ public class ControlPanel extends Composite {
 	private EventBus eb;
 	private StepperatureInput mpg;
 	private Button btnExit;
+	private Button btnTest;
 
 
 
@@ -124,6 +125,17 @@ public class ControlPanel extends Composite {
 		btnExit.setText("Exit");
 		btnExit.setFont(SWTResourceManager.getFont("Segoe UI", 15, SWT.NORMAL));
 		btnExit.setBounds(921, 463, 188, 58);
+		
+		btnTest = new Button(this, SWT.NONE);
+		btnTest.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				spoolWeight.test();
+			}
+		});
+		btnTest.setFont(SWTResourceManager.getFont("Segoe UI", 15, SWT.NORMAL));
+		btnTest.setBounds(712, 463, 125, 58);
+		btnTest.setText("Test");
 		
 		//  for testing without Stepperature
 		this.addMouseWheelListener(new MouseWheelListener() {

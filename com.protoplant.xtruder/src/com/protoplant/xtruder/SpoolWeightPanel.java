@@ -37,8 +37,8 @@ public class SpoolWeightPanel extends Group implements Runnable {
 	private Label lblData;
 	private MotorPanel refMotor;
 	
-	private volatile float grams=890;
-	private volatile float prevGrams=890;
+	private volatile float grams=0;
+	private volatile float prevGrams=0;
 	private volatile boolean isMotorRunning = false;
 	private volatile Thread thread = null;
 	private volatile long prevStepTime = 0;
@@ -289,5 +289,14 @@ public class SpoolWeightPanel extends Group implements Runnable {
 	@Override
 	protected void checkSubclass() {
 		// Disable the check that prevents subclassing of SWT components
+	}
+
+
+	public void test() {
+		log.info("");
+//		grams = 242;
+//		prevGrams = grams;
+//		lblData.setText(String.format("%.2f g", grams));
+		am.playClip("mark");
 	}
 }
