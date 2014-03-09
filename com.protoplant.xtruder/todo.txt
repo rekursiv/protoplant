@@ -6,11 +6,12 @@ msp430 analog input to hopper sensor
 
 log diameter, other params
 
-diameter-based mass
+mass counter:
+ diameter-based mass
+ make focusable, edit param
 
 back up pi OS
 
-on-screen diameter min/max/mean/std deviation
 
 
 

@@ -86,15 +86,15 @@ public class SpoolWeightPanel extends Group implements Runnable {
 			}
 		});
 		FormData fd_btnReset = new FormData();
-		fd_btnReset.bottom = new FormAttachment(lblData, 54);
-		fd_btnReset.top = new FormAttachment(lblData, 0, SWT.TOP);
-		fd_btnReset.right = new FormAttachment(0, 715);
-		fd_btnReset.left = new FormAttachment(0, 613);
+		fd_btnReset.right = new FormAttachment(0, 712);
+		fd_btnReset.left = new FormAttachment(0, 635);
 		btnReset.setLayoutData(fd_btnReset);
 		btnReset.setFont(SWTResourceManager.getFont("Segoe UI", 14, SWT.NORMAL));
 		btnReset.setText("Reset");
 		
 		grpMaterial = new Group(this, SWT.NONE);
+		fd_btnReset.top = new FormAttachment(grpMaterial, -67);
+		fd_btnReset.bottom = new FormAttachment(grpMaterial, 0, SWT.BOTTOM);
 		FormData fd_grpMaterial = new FormData();
 		fd_grpMaterial.left = new FormAttachment(btnReset, -260, SWT.LEFT);
 		fd_grpMaterial.right = new FormAttachment(btnReset, -6);
@@ -146,8 +146,8 @@ public class SpoolWeightPanel extends Group implements Runnable {
 		fl_grpDia.marginWidth = 5;
 		grpDia.setLayout(fl_grpDia);
 		FormData fd_grpDia = new FormData();
+		fd_grpDia.right = new FormAttachment(grpMaterial, -6);
 		fd_grpDia.bottom = new FormAttachment(0, 75);
-		fd_grpDia.right = new FormAttachment(0, 347);
 		fd_grpDia.top = new FormAttachment(grpReset, 0, SWT.TOP);
 		fd_grpDia.left = new FormAttachment(grpReset, 6);
 		grpDia.setLayoutData(fd_grpDia);

@@ -133,5 +133,10 @@ public class WinderMinderPanel extends MotorPanel implements Runnable {
 		st.setCurBoardIndex(boardIndex);
 		st.dumpStatus();
 	}
+	
+	@Override
+	protected void checkSubclass() {
+		// Disable the check that prevents subclassing of SWT components
+	}
 
 }
