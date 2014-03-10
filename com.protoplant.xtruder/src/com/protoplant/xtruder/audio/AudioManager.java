@@ -31,6 +31,7 @@ public class AudioManager {
 		addClip("2");
 		addClip("1");
 		addClip("mark");
+		addClip("starvin");
 	}
 	
 	public void addClip(String name) {

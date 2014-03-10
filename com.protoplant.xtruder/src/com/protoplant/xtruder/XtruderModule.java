@@ -33,6 +33,7 @@ public class XtruderModule extends AbstractModule {
 	protected void setupConfig() {
 		config = cfgMgr.load();
 		bind(XtruderConfig.class).toInstance(config);
+		bind(new TypeLiteral<ConfigManager<XtruderConfig>>() {}).toInstance(cfgMgr);
 	}
 	
 	protected void setupEventBus() {

@@ -2,20 +2,16 @@
 winder minder:
   fix switch bounce issue
 
-msp430 analog input to hopper sensor
-
-log diameter, other params
-
-mass counter:
- diameter-based mass
- make focusable, edit param
+log data (diameter, pressure, etc)
 
 back up pi OS
 
-
+record rate of indicator data tx
 
 
 =====
+
+msp430 analog input to hopper sensor
 
 alarms/warnings - text to speech
   fix memory issue - load on demand??
@@ -26,3 +22,8 @@ alarms/warnings - text to speech
 laser flaw detection
 
 ---
+
+density:
+  pcabs = 1.13
+  hitemp pla = 1.28
+

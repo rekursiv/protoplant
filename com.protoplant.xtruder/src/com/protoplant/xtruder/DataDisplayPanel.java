@@ -89,7 +89,7 @@ public class DataDisplayPanel extends Group {
 	}
 	
 	@Subscribe
-	public void onMpgStepEvent(MpgStepEvent event) {
+	public void onMpgStepEvent(MpgStepEvent event) {			////////////////////////    TEST
 		testValue+=(float)event.getStep()*0.01;
 		updateDisplay(testValue);
 	}
@@ -98,11 +98,7 @@ public class DataDisplayPanel extends Group {
 		if (value>maxValue) maxValue = value;
 		if (value<minValue) minValue = value;
 		lblData.setText(String.format("%.4f", value)+" "+config.displays[index].unit);
-//		String min = "MIN";
-//		if (minValue<90000) String.format("%.4f", minValue);
 		lblMin.setText(String.format("%.4f", minValue));
-//		String max = "MAX";
-//		if (maxValue>-90000) ;
 		lblMax.setText(String.format("%.4f", maxValue));
 	}
 	

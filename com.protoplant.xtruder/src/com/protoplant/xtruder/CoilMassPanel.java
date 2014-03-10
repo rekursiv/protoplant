@@ -31,7 +31,7 @@ import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.wb.swt.SWTResourceManager;
 
 
-public class SpoolWeightPanel extends Group implements Runnable {
+public class CoilMassPanel extends Group {
 
 	private Logger log;
 	private Label lblData;
@@ -40,7 +40,6 @@ public class SpoolWeightPanel extends Group implements Runnable {
 	private volatile float grams=0;
 	private volatile float prevGrams=0;
 	private volatile boolean isMotorRunning = false;
-	private volatile Thread thread = null;
 	private volatile long prevStepTime = 0;
 	
 	private Button rb250g;
@@ -58,12 +57,12 @@ public class SpoolWeightPanel extends Group implements Runnable {
 	private AudioManager am;
 		
 	
-	public SpoolWeightPanel(Composite parent, Injector injector, MotorPanel refMotor) {
+	public CoilMassPanel(Composite parent, Injector injector, MotorPanel refMotor) {
 		super(parent, SWT.NONE);
 		
 		this.refMotor = refMotor;
 		
-		setText("Spool Weight");
+		setText("Coil Mass");
 		setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
 		setLayout(new FormLayout());
 		
@@ -180,9 +179,8 @@ public class SpoolWeightPanel extends Group implements Runnable {
 		});
 	}
 	
-	public void destroy() {
+	public void destroy() {     //  FIXME  not needed
 		isMotorRunning = false;
-		if (thread!=null) thread.interrupt();
 	}
 	
 	@Subscribe
@@ -198,26 +196,8 @@ public class SpoolWeightPanel extends Group implements Runnable {
 
 	}
 	
-	@Override
-	public void run() {
-		try {
-			Thread.sleep(100);
-		} catch (InterruptedException e) {
-			return;
-		}
-
-		updateDisplay();
-		
-		if (isMotorRunning) {
-			thread = new Thread(this);
-			thread.start();
-		}
-	}
-	
 	public void start() {
 		isMotorRunning = true;
-		thread = new Thread(this);
-		thread.start();
 	}
 	
 	
@@ -225,37 +205,46 @@ public class SpoolWeightPanel extends Group implements Runnable {
 		isMotorRunning = false;
 	}
 	
-	private void updateDisplay() {
+	@Subscribe
+	public void onDataRx(final SerialDataRxEvent evt) {
 		Display.getDefault().asyncExec(new Runnable() {
-
 			@Override
 			public void run() {
-				float delay = (System.currentTimeMillis()-prevStepTime)/1000.0f;
-				prevStepTime=System.currentTimeMillis();
-				if (delay>1) return;
-				float scale = 0;
-				if (rb175.getSelection()) {
-//					if (rbPcabs.getSelection()) scale = config.pcabs175GramsPerInch;
-//					else if (rbHtpla.getSelection()) scale = config.htpla175density;
-//					else if (rbCfpla.getSelection()) scale = config.cfpla175GramsPerInch;
-				} else if (rb3.getSelection()) {
-//					if (rbPcabs.getSelection()) scale = config.pcabs3GramsPerInch;
-//					else if (rbHtpla.getSelection()) scale = config.htpla3GramsPerInch;
-//					else if (rbCfpla.getSelection()) scale = config.cfpla3GramsPerInch;
-				}
-				grams+=(refMotor.getSpeed()*delay)*scale;
-				if (rb250g.getSelection()) {
-					updateAudio250g();
-					if (grams>250) grams=0;
-				}
-				else if (rb1kg.getSelection()) {
-					updateAudio1kg();
-					if (grams>1000) grams=0;
-				}
-				lblData.setText(String.format("%.2f g", grams));
-				prevGrams = grams;
+				float scale = config.displays[0].scale;
+				int curValue = (evt.getByte(0)<<8)|evt.getByte(1);
+				curValue = (short)curValue;  // make signed
+				calcMass((float)curValue*scale);
 			}
 		});
+	}
+	
+	private void calcMass(float diameter) {
+		float delay = (System.currentTimeMillis()-prevStepTime)/1000.0f;
+		prevStepTime=System.currentTimeMillis();
+		if (delay>1) return;
+
+		float density = 0;
+		if (rbPcabs.getSelection()) density = config.pcabsDensity;
+		else if (rbHtpla.getSelection()) density = config.htplaDensity;
+		else if (rbCfpla.getSelection()) density = config.cfplaDensity;
+
+		float length = (refMotor.getSpeed()*delay)*2.54f;     // convert inch/second to cm
+		float radius = diameter/20;                           // convert to cm
+		float volume = length*(radius*radius*3.14159f);
+		grams+=volume*density;
+		
+		if (rb250g.getSelection()) {
+			updateAudio250g();
+			if (grams>250) grams=0;
+		}
+		else if (rb1kg.getSelection()) {
+			updateAudio1kg();
+			if (grams>1000) grams=0;
+		}
+		
+		lblData.setText(String.format("%.2f g", grams));
+		prevGrams = grams;
+
 	}
 	
 	private void updateAudio250g() {

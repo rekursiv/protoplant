@@ -16,6 +16,8 @@ import com.google.inject.Injector;
 
 import org.eclipse.wb.swt.SWTResourceManager;
 
+import util.config.ConfigManager;
+
 public class ControlPanel extends Composite {
 	private MotorPanel motor1;
 	private MotorPanel motor2;
@@ -24,7 +26,7 @@ public class ControlPanel extends Composite {
 	private MotorPanel motor4;
 	private LinkPanel linkMotor2_4;
 	private WinderMinderPanel winderMinder;
-	private SpoolWeightPanel spoolWeight;
+	private CoilMassPanel coilMass;
 	
 	private Button btnStopAll;
 	private Button btnRunAll;
@@ -40,7 +42,10 @@ public class ControlPanel extends Composite {
 	private StepperatureInput mpg;
 	private Button btnExit;
 	private Button btnTest;
+	private ConfigManager<XtruderConfig> cfgMgr;
+	private Button btnReloadConfig;
 
+	
 
 
 
@@ -68,14 +73,14 @@ public class ControlPanel extends Composite {
 		linkMotor2_4.setBounds(386, 121, 350, 105);
 		linkMotor2_4.link();
 		
-		spoolWeight = new SpoolWeightPanel(this, injector, motor2);
-		spoolWeight.setBounds(386, 232, 723, 105);
+		coilMass = new CoilMassPanel(this, injector, motor2);
+		coilMass.setBounds(386, 232, 723, 105);
 
 		data1 = new DataDisplayPanel(this, injector, "Indicator", 0, true);
 		data1.setBounds(10, 343, 350, 105);
-		data2 = new DataDisplayPanel(this, injector, "Laser", 1, false);
+		data2 = new DataDisplayPanel(this, injector, "Pressure", 1, false);
 		data2.setBounds(386, 343, 350, 105);
-		data3 = new DataDisplayPanel(this, injector, "Pressure", 2, false);
+		data3 = new DataDisplayPanel(this, injector, "Hopper", 2, false);
 		data3.setBounds(759, 343, 350, 105);
 
 		btnStopAll = new Button(this, SWT.NONE);
@@ -86,7 +91,7 @@ public class ControlPanel extends Composite {
 			}
 		});
 		btnStopAll.setFont(SWTResourceManager.getFont("Segoe UI", 15, SWT.NORMAL));
-		btnStopAll.setBounds(10, 463, 188, 58);
+		btnStopAll.setBounds(10, 463, 120, 58);
 		btnStopAll.setText("Stop All");
 		
 		btnRunAll = new Button(this, SWT.NONE);
@@ -97,7 +102,7 @@ public class ControlPanel extends Composite {
 			}
 		});
 		btnRunAll.setFont(SWTResourceManager.getFont("Segoe UI", 15, SWT.NORMAL));
-		btnRunAll.setBounds(250, 463, 154, 58);
+		btnRunAll.setBounds(138, 463, 120, 58);
 		btnRunAll.setText("Run All");
 		
 		btnReinitMotors = new Button(this, SWT.NONE);
@@ -109,7 +114,7 @@ public class ControlPanel extends Composite {
 		});
 		btnReinitMotors.setText("Re-Init Motors");
 		btnReinitMotors.setFont(SWTResourceManager.getFont("Segoe UI", 15, SWT.NORMAL));
-		btnReinitMotors.setBounds(465, 463, 188, 58);
+		btnReinitMotors.setBounds(315, 463, 150, 58);
 
 		btnExit = new Button(this, SWT.NONE);
 		btnExit.addSelectionListener(new SelectionAdapter() {
@@ -117,25 +122,36 @@ public class ControlPanel extends Composite {
 			public void widgetSelected(SelectionEvent arg0) {
 				stopAll();
 				winderMinder.destroy();
-				spoolWeight.destroy();
+				coilMass.destroy();
 				try {Thread.sleep(200);} catch (InterruptedException e) {}  // give things a chance to shut down
 				getShell().dispose();
 			}
 		});
 		btnExit.setText("Exit");
 		btnExit.setFont(SWTResourceManager.getFont("Segoe UI", 15, SWT.NORMAL));
-		btnExit.setBounds(921, 463, 188, 58);
+		btnExit.setBounds(1031, 463, 78, 58);
 		
 		btnTest = new Button(this, SWT.NONE);
 		btnTest.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				spoolWeight.test();
+				coilMass.test();
 			}
 		});
 		btnTest.setFont(SWTResourceManager.getFont("Segoe UI", 15, SWT.NORMAL));
-		btnTest.setBounds(712, 463, 125, 58);
+		btnTest.setBounds(927, 463, 78, 58);
 		btnTest.setText("Test");
+		
+		btnReloadConfig = new Button(this, SWT.NONE);
+		btnReloadConfig.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				cfgMgr.load();
+			}
+		});
+		btnReloadConfig.setText("Reload Config");
+		btnReloadConfig.setFont(SWTResourceManager.getFont("Segoe UI", 15, SWT.NORMAL));
+		btnReloadConfig.setBounds(471, 463, 150, 58);
 		
 		//  for testing without Stepperature
 		this.addMouseWheelListener(new MouseWheelListener() {
@@ -150,11 +166,12 @@ public class ControlPanel extends Composite {
 	}
 	
 	@Inject
-	public void inject(Logger log, EventBus eb, StSmc st, StepperatureInput mpg) {
+	public void inject(Logger log, EventBus eb, StSmc st, StepperatureInput mpg, ConfigManager<XtruderConfig> cfgMgr) {
 		this.log = log;
 		this.eb = eb;
 		this.st = st;
 		this.mpg = mpg;
+		this.cfgMgr = cfgMgr;
 	}
 
 	
@@ -164,7 +181,7 @@ public class ControlPanel extends Composite {
 		motor3.start(false);
 		motor4.start(false);
 		winderMinder.start(false);
-		spoolWeight.start();
+		coilMass.start();
 	}
 	
 	public void stopAll() {
@@ -173,7 +190,7 @@ public class ControlPanel extends Composite {
 		motor3.stop(false);
 		motor4.stop(false);
 		winderMinder.stop(false);
-		spoolWeight.stop();
+		coilMass.stop();
 	}
 
 	
