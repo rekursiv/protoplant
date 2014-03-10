@@ -6,7 +6,6 @@ log data (diameter, pressure, etc)
 
 back up pi OS
 
-record rate of indicator data tx
 
 
 =====
@@ -16,12 +15,15 @@ msp430 analog input to hopper sensor
 alarms/warnings - text to speech
   fix memory issue - load on demand??
 
+fix OS so xtruder only loads one instance
 
 =======
 
 laser flaw detection
 
 ---
+
+rate of indicator data tx = 10hz
 
 density:
   pcabs = 1.13

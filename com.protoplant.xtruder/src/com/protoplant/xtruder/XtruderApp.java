@@ -9,6 +9,7 @@ import org.eclipse.swt.layout.FillLayout;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.protoplant.xtruder.audio.AudioManager;
+import com.protoplant.xtruder.audio.HopperAlarm;
 
 public class XtruderApp {
 	
@@ -56,14 +57,19 @@ public class XtruderApp {
 		
 		new RootPanel(shell, SWT.NONE, injector);
 		
+		
 		StepperatureInput mpg = injector.getInstance(StepperatureInput.class);
+		
 		StSmc smc = injector.getInstance(StSmc.class);
-		AudioManager am = injector.getInstance(AudioManager.class);
 		smc.initSpi();
 		smc.initAllBoards();
+		
+		AudioManager am = injector.getInstance(AudioManager.class);
+		HopperAlarm hopperAlarm = injector.getInstance(HopperAlarm.class);
+
 		SerialPortManager spm = injector.getInstance(SerialPortManager.class);
 		spm.init();
-		
+
 		
 		shell.init();  // main loop
 		

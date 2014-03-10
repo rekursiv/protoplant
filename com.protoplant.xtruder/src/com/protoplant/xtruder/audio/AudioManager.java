@@ -25,8 +25,8 @@ public class AudioManager {
 		addClip("240g");
 //		addClip("900g");
 		addClip("990g");
-		addClip("5");
-		addClip("4");
+//		addClip("5");
+//		addClip("4");
 		addClip("3");
 		addClip("2");
 		addClip("1");

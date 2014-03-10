@@ -30,6 +30,8 @@ import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.wb.swt.SWTResourceManager;
 
+import util.config.ConfigManager;
+
 
 public class CoilMassPanel extends Group {
 
@@ -37,6 +39,7 @@ public class CoilMassPanel extends Group {
 	private Label lblData;
 	private MotorPanel refMotor;
 	
+	private volatile float delay=0;
 	private volatile float grams=0;
 	private volatile float prevGrams=0;
 	private volatile boolean isMotorRunning = false;
@@ -50,11 +53,13 @@ public class CoilMassPanel extends Group {
 	private Button btnReset;
 	private Group grpMaterial;
 	private Group grpReset;
-	private XtruderConfig config;
 	private Group grpDia;
 	private Button rb175;
 	private Button rb3;
+	
+	private XtruderConfig config;
 	private AudioManager am;
+	private ConfigManager<XtruderConfig> cfgMgr;
 		
 	
 	public CoilMassPanel(Composite parent, Injector injector, MotorPanel refMotor) {
@@ -167,9 +172,10 @@ public class CoilMassPanel extends Group {
 	
 	
 	@Inject
-	public void inject(Logger log, XtruderConfig config, AudioManager am) {
+	public void inject(Logger log, XtruderConfig config, ConfigManager<XtruderConfig> cfgMgr, AudioManager am) {
 		this.log = log;
 		this.config = config;
+		this.cfgMgr = cfgMgr;
 		this.am = am;
 		this.addDisposeListener(new DisposeListener() {
 			@Override
@@ -196,17 +202,25 @@ public class CoilMassPanel extends Group {
 
 	}
 	
+	public void reloadConfig() {
+		config = cfgMgr.load();
+//		log.info("###  "+config.cfplaDensity);		
+	}
+	
 	public void start() {
+		log.info("");
 		isMotorRunning = true;
 	}
 	
 	
 	public void stop() {
+		log.info("");
 		isMotorRunning = false;
 	}
 	
 	@Subscribe
 	public void onDataRx(final SerialDataRxEvent evt) {
+		if (!isMotorRunning) return;
 		Display.getDefault().asyncExec(new Runnable() {
 			@Override
 			public void run() {
@@ -219,7 +233,7 @@ public class CoilMassPanel extends Group {
 	}
 	
 	private void calcMass(float diameter) {
-		float delay = (System.currentTimeMillis()-prevStepTime)/1000.0f;
+		delay = (System.currentTimeMillis()-prevStepTime)/1000.0f;  // convert to seconds
 		prevStepTime=System.currentTimeMillis();
 		if (delay>1) return;
 
@@ -282,10 +296,11 @@ public class CoilMassPanel extends Group {
 
 
 	public void test() {
-		log.info("");
+		log.info("data period="+delay);
+		config.cfplaDensity = 30;
 //		grams = 242;
 //		prevGrams = grams;
 //		lblData.setText(String.format("%.2f g", grams));
-		am.playClip("mark");
+//		am.playClip("mark");
 	}
 }

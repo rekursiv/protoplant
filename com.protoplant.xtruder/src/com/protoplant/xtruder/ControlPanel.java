@@ -42,10 +42,7 @@ public class ControlPanel extends Composite {
 	private StepperatureInput mpg;
 	private Button btnExit;
 	private Button btnTest;
-	private ConfigManager<XtruderConfig> cfgMgr;
 	private Button btnReloadConfig;
-
-	
 
 
 
@@ -145,8 +142,8 @@ public class ControlPanel extends Composite {
 		btnReloadConfig = new Button(this, SWT.NONE);
 		btnReloadConfig.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				cfgMgr.load();
+			public void widgetSelected(SelectionEvent arg0) {   //  FIXME only reloads config for coil mass panel
+				coilMass.reloadConfig();
 			}
 		});
 		btnReloadConfig.setText("Reload Config");
@@ -166,14 +163,12 @@ public class ControlPanel extends Composite {
 	}
 	
 	@Inject
-	public void inject(Logger log, EventBus eb, StSmc st, StepperatureInput mpg, ConfigManager<XtruderConfig> cfgMgr) {
+	public void inject(Logger log, EventBus eb, StSmc st, StepperatureInput mpg) {
 		this.log = log;
 		this.eb = eb;
 		this.st = st;
 		this.mpg = mpg;
-		this.cfgMgr = cfgMgr;
 	}
-
 	
 	public void startAll() {
 		motor1.start(false);
