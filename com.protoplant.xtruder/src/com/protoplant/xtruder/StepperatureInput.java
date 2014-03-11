@@ -17,14 +17,16 @@ import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
 import com.pi4j.io.gpio.event.GpioPinListenerDigital;
 import com.pi4j.wiringpi.Gpio;
 
-
+//  TODO:  change name to "GPIO"
 @Singleton
 public class StepperatureInput implements GpioPinListenerDigital, Runnable {
 	
 	protected GpioController gpio=null;
 	protected GpioPinDigitalInput stepA=null;
 	protected GpioPinDigitalInput stepB=null;
+	protected GpioPinDigitalInput laserOver=null;
 	
+	private volatile Thread thread = null;
 	protected volatile long prevStepTime = 0;
 	protected volatile int curStep = 0;
 //	protected int prevStep = 0;
@@ -32,6 +34,7 @@ public class StepperatureInput implements GpioPinListenerDigital, Runnable {
 	
 	private Logger log;
 	private EventBus eb;
+	private GpioPinDigitalInput laserUnder;
 	
 	
 	@Inject
@@ -48,9 +51,14 @@ public class StepperatureInput implements GpioPinListenerDigital, Runnable {
         	stepA.addListener(this);
         	stepB = gpio.provisionDigitalInputPin(RaspiPin.GPIO_07, PinPullResistance.PULL_DOWN);
         	stepB.addListener(this);
+        	laserUnder = gpio.provisionDigitalInputPin(RaspiPin.GPIO_02, PinPullResistance.PULL_UP);
+        	laserUnder.addListener(this);
+        	laserOver = gpio.provisionDigitalInputPin(RaspiPin.GPIO_03, PinPullResistance.PULL_UP);
+        	laserOver.addListener(this);
     	}
     	
-		new Thread(this).start();
+		thread = new Thread(this);
+		thread.start();
 		
 	}
 
@@ -63,16 +71,21 @@ public class StepperatureInput implements GpioPinListenerDigital, Runnable {
 		}
 		
 		if (curStep!=0) {
-			asyncPost(new MpgStepEvent(curStep));
+			asyncPostStep(new MpgStepEvent(curStep));
 			curStep=0;
 		}
 		
-		if (isActive) new Thread(this).start();
+		if (isActive) {
+			thread = new Thread(this);
+			thread.start();
+		}
 	}
 	
 	
 	public void destroy() {
 		isActive  = false;
+		if (thread!=null) thread.interrupt();
+		try {Thread.sleep(200);} catch (InterruptedException e) {}  // give things a chance to shut down
 		if (gpio!=null) gpio.shutdown();
 		log.info("");
 	}
@@ -81,11 +94,17 @@ public class StepperatureInput implements GpioPinListenerDigital, Runnable {
 	
 	@Override
 	public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
-//		System.out.println(" --> GPIO PIN STATE CHANGE: " + event.getPin() + " = " + event.getState());
+//		log.info(" --> GPIO PIN STATE CHANGE: " + event.getPin() + " = " + event.getState());
 		if (event.getPin()==stepA && event.getState()==PinState.HIGH) {
 			calcStep(1);
 		} else if (event.getPin()==stepB && event.getState()==PinState.HIGH) {
 			calcStep(-1);
+		} else if (event.getPin()==laserUnder && event.getState()==PinState.HIGH) {
+//			log.info("* LASER Under *");
+			asyncPostLaser(new LaserEvent(false));
+		} else if (event.getPin()==laserOver && event.getState()==PinState.HIGH) {
+//			log.info("* LASER Over *");
+			asyncPostLaser(new LaserEvent(true));
 		}
 	}
 	
@@ -102,7 +121,17 @@ public class StepperatureInput implements GpioPinListenerDigital, Runnable {
 
 	}
 	
-	private void asyncPost(final MpgStepEvent event) {
+	
+	private void asyncPostLaser(final LaserEvent event) {
+		Display.getDefault().asyncExec(new Runnable() {
+			@Override
+			public void run() {
+				eb.post(event);
+			}
+		});
+	}
+	
+	private void asyncPostStep(final MpgStepEvent event) {
 		Display.getDefault().asyncExec(new Runnable() {
 			@Override
 			public void run() {
@@ -125,6 +154,11 @@ public class StepperatureInput implements GpioPinListenerDigital, Runnable {
 		else if (delay<1280) curStep+=dir*2;
 		else curStep+=dir;
 	}
+	
+//	public void simulateStep(int dir) {
+//		if (dir>0) asyncPostLaser(new LaserEvent(false));
+//		else asyncPostLaser(new LaserEvent(true));
+//	}
 
 
 }

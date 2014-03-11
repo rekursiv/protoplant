@@ -53,9 +53,6 @@ public class CoilMassPanel extends Group {
 	private Button btnReset;
 	private Group grpMaterial;
 	private Group grpReset;
-	private Group grpDia;
-	private Button rb175;
-	private Button rb3;
 	
 	private XtruderConfig config;
 	private AudioManager am;
@@ -74,7 +71,6 @@ public class CoilMassPanel extends Group {
 		lblData = new Label(this, SWT.NONE);
 		FormData fd_lblData = new FormData();
 		fd_lblData.bottom = new FormAttachment(0, 62);
-		fd_lblData.right = new FormAttachment(0, 162);
 		fd_lblData.top = new FormAttachment(0, 8);
 		fd_lblData.left = new FormAttachment(0, 7);
 		lblData.setLayoutData(fd_lblData);
@@ -90,15 +86,15 @@ public class CoilMassPanel extends Group {
 			}
 		});
 		FormData fd_btnReset = new FormData();
-		fd_btnReset.right = new FormAttachment(0, 712);
-		fd_btnReset.left = new FormAttachment(0, 635);
+		fd_btnReset.bottom = new FormAttachment(lblData, 67);
+		fd_btnReset.top = new FormAttachment(lblData, 0, SWT.TOP);
+		fd_btnReset.right = new FormAttachment(0, 680);
+		fd_btnReset.left = new FormAttachment(0, 573);
 		btnReset.setLayoutData(fd_btnReset);
 		btnReset.setFont(SWTResourceManager.getFont("Segoe UI", 14, SWT.NORMAL));
 		btnReset.setText("Reset");
 		
 		grpMaterial = new Group(this, SWT.NONE);
-		fd_btnReset.top = new FormAttachment(grpMaterial, -67);
-		fd_btnReset.bottom = new FormAttachment(grpMaterial, 0, SWT.BOTTOM);
 		FormData fd_grpMaterial = new FormData();
 		fd_grpMaterial.left = new FormAttachment(btnReset, -260, SWT.LEFT);
 		fd_grpMaterial.right = new FormAttachment(btnReset, -6);
@@ -122,13 +118,16 @@ public class CoilMassPanel extends Group {
 		rbCfpla.setText("CFPLA");
 		
 		grpReset = new Group(this, SWT.NONE);
+		fd_lblData.right = new FormAttachment(grpReset, -6);
+		fd_grpMaterial.bottom = new FormAttachment(grpReset, 75);
+		fd_grpMaterial.top = new FormAttachment(grpReset, 0, SWT.TOP);
 		FormData fd_grpReset = new FormData();
+		fd_grpReset.right = new FormAttachment(grpMaterial, -6);
 		fd_grpReset.bottom = new FormAttachment(0, 75);
-		fd_grpReset.right = new FormAttachment(0, 246);
 		fd_grpReset.top = new FormAttachment(0, 0);
-		fd_grpReset.left = new FormAttachment(0, 168);
+		fd_grpReset.left = new FormAttachment(0, 155);
 		grpReset.setLayoutData(fd_grpReset);
-		FillLayout fl_grpReset = new FillLayout(SWT.VERTICAL);
+		FillLayout fl_grpReset = new FillLayout(SWT.HORIZONTAL);
 		fl_grpReset.marginWidth = 5;
 		fl_grpReset.spacing = 4;
 		grpReset.setLayout(fl_grpReset);
@@ -141,29 +140,6 @@ public class CoilMassPanel extends Group {
 		rb1kg = new Button(grpReset, SWT.RADIO);
 		rb1kg.setFont(SWTResourceManager.getFont("Segoe UI", 11, SWT.NORMAL));
 		rb1kg.setText("1kg");
-		
-		grpDia = new Group(this, SWT.NONE);
-		fd_grpMaterial.bottom = new FormAttachment(grpDia, 75);
-		fd_grpMaterial.top = new FormAttachment(grpDia, 0, SWT.TOP);
-		FillLayout fl_grpDia = new FillLayout(SWT.VERTICAL);
-		fl_grpDia.spacing = 4;
-		fl_grpDia.marginWidth = 5;
-		grpDia.setLayout(fl_grpDia);
-		FormData fd_grpDia = new FormData();
-		fd_grpDia.right = new FormAttachment(grpMaterial, -6);
-		fd_grpDia.bottom = new FormAttachment(0, 75);
-		fd_grpDia.top = new FormAttachment(grpReset, 0, SWT.TOP);
-		fd_grpDia.left = new FormAttachment(grpReset, 6);
-		grpDia.setLayoutData(fd_grpDia);
-		
-		rb175 = new Button(grpDia, SWT.RADIO);
-		rb175.setText("1.75mm");
-		rb175.setSelection(true);
-		rb175.setFont(SWTResourceManager.getFont("Segoe UI", 11, SWT.NORMAL));
-		
-		rb3 = new Button(grpDia, SWT.RADIO);
-		rb3.setText("3mm");
-		rb3.setFont(SWTResourceManager.getFont("Segoe UI", 11, SWT.NORMAL));
 		
 		
 		if (injector!=null) injector.injectMembers(this);
@@ -183,10 +159,6 @@ public class CoilMassPanel extends Group {
 				stop();
 			}
 		});
-	}
-	
-	public void destroy() {     //  FIXME  not needed
-		isMotorRunning = false;
 	}
 	
 	@Subscribe
@@ -248,12 +220,12 @@ public class CoilMassPanel extends Group {
 		grams+=volume*density;
 		
 		if (rb250g.getSelection()) {
-			updateAudio250g();
 			if (grams>250) grams=0;
+			updateAudio250g();
 		}
 		else if (rb1kg.getSelection()) {
-			updateAudio1kg();
 			if (grams>1000) grams=0;
+			updateAudio1kg();
 		}
 		
 		lblData.setText(String.format("%.2f g", grams));
@@ -284,8 +256,8 @@ public class CoilMassPanel extends Group {
 	}
 	
 	private boolean checkpoint(float ref) {
-		if (prevGrams<=ref && grams>=ref) return true;
-		else if (ref-0.0f<0.1 && grams<prevGrams) return true;
+		if (ref==0 && (grams+10)<prevGrams) return true;
+		else if (ref!=0 && prevGrams<=ref && grams>=ref) return true;
 		else return false;
 	}
 	
@@ -296,7 +268,7 @@ public class CoilMassPanel extends Group {
 
 
 	public void test() {
-		log.info("data period="+delay);
+//		log.info("data period="+delay);
 		config.cfplaDensity = 30;
 //		grams = 242;
 //		prevGrams = grams;

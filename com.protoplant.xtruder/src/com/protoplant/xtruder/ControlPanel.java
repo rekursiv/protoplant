@@ -35,7 +35,7 @@ public class ControlPanel extends Composite {
 	private StSmc st;
 	private DataDisplayPanel data1;
 	private DataDisplayPanel data2;
-	private DataDisplayPanel data3;
+	private FaultPanel fault;
 
 	private Logger log;
 	private EventBus eb;
@@ -77,8 +77,8 @@ public class ControlPanel extends Composite {
 		data1.setBounds(10, 343, 350, 105);
 		data2 = new DataDisplayPanel(this, injector, "Pressure", 1, false);
 		data2.setBounds(386, 343, 350, 105);
-		data3 = new DataDisplayPanel(this, injector, "Hopper", 2, false);
-		data3.setBounds(759, 343, 350, 105);
+		fault = new FaultPanel(this, injector);
+		fault.setBounds(759, 343, 350, 105);
 
 		btnStopAll = new Button(this, SWT.NONE);
 		btnStopAll.addSelectionListener(new SelectionAdapter() {
@@ -119,7 +119,6 @@ public class ControlPanel extends Composite {
 			public void widgetSelected(SelectionEvent arg0) {
 				stopAll();
 				winderMinder.destroy();
-				coilMass.destroy();
 				try {Thread.sleep(200);} catch (InterruptedException e) {}  // give things a chance to shut down
 				getShell().dispose();
 			}

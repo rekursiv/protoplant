@@ -88,11 +88,11 @@ public class DataDisplayPanel extends Group {
 //		System.out.println("> "+curValue);
 	}
 	
-	@Subscribe
-	public void onMpgStepEvent(MpgStepEvent event) {			////////////////////////    TEST
-		testValue+=(float)event.getStep()*0.01;
-		updateDisplay(testValue);
-	}
+//	@Subscribe
+//	public void onMpgStepEvent(MpgStepEvent event) {			////////////////////////    TEST
+//		testValue+=(float)event.getStep()*0.01;
+//		updateDisplay(testValue);
+//	}
 	
 	public void updateDisplay(float value) {
 		if (value>maxValue) maxValue = value;
