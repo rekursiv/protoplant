@@ -43,8 +43,11 @@ public class SerialPortManager implements Runnable, SerialPortEventListener {
 	
 	public void init() {
 //		listPorts();       ///    TEST
+		String portName;
+		if (System.getProperty("os.arch").equals("arm")) portName = "/dev/ttyAMA0";
+		else portName = "COM1";
 		isDestroyed = false;
-		serialPort = new SerialPort("/dev/ttyAMA0");  //  COM1
+		serialPort = new SerialPort(portName);
 		connect(); 
 		thread = new Thread(this);
 		thread.start();

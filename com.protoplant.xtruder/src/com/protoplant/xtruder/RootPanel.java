@@ -31,38 +31,38 @@ public class RootPanel extends Composite {
 
 		setLayout(new FormLayout());
 
-		int statusPanelTop = 12;
-		int statusPanelHeight = 25;
+		int top = 12;
+//		int statusPanelHeight = 25;
 		
-//		if (true) {  // for WindowBuilder
-		if (injector!=null) {
+		if (true) {  // for WindowBuilder
+//		if (injector!=null) {
 			XtruderConfig cfg = injector.getInstance(XtruderConfig.class);
 			if (cfg.showLogView) {
 				logView = new LogView(this, SWT.NONE);
 				FormData fd_logView = new FormData();
 				fd_logView.right = new FormAttachment(100, -12);
-				fd_logView.bottom = new FormAttachment(0, 130);
+				fd_logView.bottom = new FormAttachment(0, 120);
 				fd_logView.top = new FormAttachment(0, 12);
 				fd_logView.left = new FormAttachment(0, 12);
 				logView.setLayoutData(fd_logView);
 				LogSetup.initView(logView, Level.ALL);
-				statusPanelTop = 136;
+				top = 126;
 			}
 		}
 		
-		statusPanel = new StatusPanel(this, injector);
-		FormData fd_statusPanel = new FormData();
-		fd_statusPanel.right = new FormAttachment(100, -12);
-		fd_statusPanel.top = new FormAttachment(0, statusPanelTop);
-		fd_statusPanel.bottom = new FormAttachment(0, statusPanelTop+statusPanelHeight);
-		fd_statusPanel.left = new FormAttachment(0, 12);
-		statusPanel.setLayoutData(fd_statusPanel);
+//		statusPanel = new StatusPanel(this, injector);
+//		FormData fd_statusPanel = new FormData();
+//		fd_statusPanel.right = new FormAttachment(100, -12);
+//		fd_statusPanel.top = new FormAttachment(0, statusPanelTop);
+//		fd_statusPanel.bottom = new FormAttachment(0, statusPanelTop+statusPanelHeight);
+//		fd_statusPanel.left = new FormAttachment(0, 12);
+//		statusPanel.setLayoutData(fd_statusPanel);
 		
 		FormData fd_ctlPanel = new FormData();
 		fd_ctlPanel.left = new FormAttachment(0, 0);
 		fd_ctlPanel.right = new FormAttachment(100, 0);
 		fd_ctlPanel.bottom = new FormAttachment(100, 0);
-		fd_ctlPanel.top = new FormAttachment(statusPanel, 6);
+		fd_ctlPanel.top = new FormAttachment(0, top);
 		ctlPanel.setLayoutData(fd_ctlPanel);
 
 	}

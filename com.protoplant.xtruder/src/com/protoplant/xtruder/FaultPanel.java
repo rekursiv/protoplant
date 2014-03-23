@@ -30,7 +30,7 @@ public class FaultPanel extends Group {
 
 	public FaultPanel(Composite parent, Injector injector) {
 		super(parent, SWT.NONE);
-		setFont(SWTResourceManager.getFont("Segoe UI", 15, SWT.NORMAL));
+		setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
 		setText("Faults");
 		
 		btnReset = new Button(this, SWT.NONE);

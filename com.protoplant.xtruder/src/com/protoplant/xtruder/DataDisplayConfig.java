@@ -8,7 +8,6 @@ public class DataDisplayConfig {
 
 	public float scale = 1.0f;
 	public String unit = "mm";
-	
-	
+	public float smoothing = 4.0f;
 	
 }

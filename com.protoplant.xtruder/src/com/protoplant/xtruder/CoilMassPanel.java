@@ -59,7 +59,7 @@ public class CoilMassPanel extends Group {
 	private ConfigManager<XtruderConfig> cfgMgr;
 		
 	
-	public CoilMassPanel(Composite parent, Injector injector, MotorPanel refMotor) {
+	public CoilMassPanel(Composite parent, Injector injector, MotorPanel refMotor) {   //  350 x 327
 		super(parent, SWT.NONE);
 		
 		this.refMotor = refMotor;
@@ -86,18 +86,18 @@ public class CoilMassPanel extends Group {
 			}
 		});
 		FormData fd_btnReset = new FormData();
-		fd_btnReset.bottom = new FormAttachment(lblData, 67);
-		fd_btnReset.top = new FormAttachment(lblData, 0, SWT.TOP);
-		fd_btnReset.right = new FormAttachment(0, 680);
-		fd_btnReset.left = new FormAttachment(0, 573);
+		fd_btnReset.bottom = new FormAttachment(0, 95);
+		fd_btnReset.top = new FormAttachment(0, 28);
+		fd_btnReset.right = new FormAttachment(0, 295);
+		fd_btnReset.left = new FormAttachment(0, 188);
 		btnReset.setLayoutData(fd_btnReset);
 		btnReset.setFont(SWTResourceManager.getFont("Segoe UI", 14, SWT.NORMAL));
 		btnReset.setText("Reset");
 		
 		grpMaterial = new Group(this, SWT.NONE);
 		FormData fd_grpMaterial = new FormData();
-		fd_grpMaterial.left = new FormAttachment(btnReset, -260, SWT.LEFT);
-		fd_grpMaterial.right = new FormAttachment(btnReset, -6);
+		fd_grpMaterial.right = new FormAttachment(0, 260);
+		fd_grpMaterial.left = new FormAttachment(0, 15);
 		grpMaterial.setLayoutData(fd_grpMaterial);
 		FillLayout fl_grpMaterial = new FillLayout(SWT.HORIZONTAL);
 		fl_grpMaterial.marginWidth = 5;
@@ -118,14 +118,14 @@ public class CoilMassPanel extends Group {
 		rbCfpla.setText("CFPLA");
 		
 		grpReset = new Group(this, SWT.NONE);
-		fd_lblData.right = new FormAttachment(grpReset, -6);
-		fd_grpMaterial.bottom = new FormAttachment(grpReset, 75);
-		fd_grpMaterial.top = new FormAttachment(grpReset, 0, SWT.TOP);
+		fd_grpMaterial.bottom = new FormAttachment(grpReset, 81, SWT.BOTTOM);
+		fd_grpMaterial.top = new FormAttachment(grpReset, 6);
+		fd_lblData.right = new FormAttachment(0, 140);
 		FormData fd_grpReset = new FormData();
-		fd_grpReset.right = new FormAttachment(grpMaterial, -6);
-		fd_grpReset.bottom = new FormAttachment(0, 75);
-		fd_grpReset.top = new FormAttachment(0, 0);
-		fd_grpReset.left = new FormAttachment(0, 155);
+		fd_grpReset.bottom = new FormAttachment(lblData, 81, SWT.BOTTOM);
+		fd_grpReset.top = new FormAttachment(lblData, 6);
+		fd_grpReset.right = new FormAttachment(0, 160);
+		fd_grpReset.left = new FormAttachment(0, 8);
 		grpReset.setLayoutData(fd_grpReset);
 		FillLayout fl_grpReset = new FillLayout(SWT.HORIZONTAL);
 		fl_grpReset.marginWidth = 5;

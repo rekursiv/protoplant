@@ -5,33 +5,36 @@
   "logToConsole" : true,
   "logToFile" : false,
   "showLogView" : true,
-  "pcabsDensity" : 1.13,
-  "htplaDensity" : 1.28,
+  "pcabsDensity" : 1.0,
+  "htplaDensity" : 1.0,
   "cfplaDensity" : 1.0,
   "motors" : [ {
-	    "speedInit" : 10.0,
-	    "speedScale" : 2890.0
-	  }, {
-	    "speedInit" : 10.0,
-	    "speedScale" : 2890.0
-	  }, {
-	    "speedInit" : 9.7,
-	    "speedScale" : 2890.0
-	  }, {
-	    "speedInit" : 9.7,
-	    "speedScale" : 2890.0
-	  }, {
-	    "speedInit" : 2.0,
-	    "speedScale" : 2890.0
-	  } ],
-	  "displays" : [ {
-	    "scale" : 0.01,
-	    "unit" : "mm"
-	  }, {
-	    "scale" : 3.363288,
-	    "unit" : "psi"
-	  }, {
-	    "scale" : 0.09777,
-	    "unit" : "mm"
-	  } ]
+    "speedInit" : 5.0,
+    "speedScale" : 2890.0
+  }, {
+    "speedInit" : 5.0,
+    "speedScale" : 2890.0
+  }, {
+    "speedInit" : 5.0,
+    "speedScale" : 2890.0
+  }, {
+    "speedInit" : 5.0,
+    "speedScale" : 2890.0
+  }, {
+    "speedInit" : 5.0,
+    "speedScale" : 2890.0
+  } ],
+  "displays" : [ {
+    "scale" : 1.0,
+    "unit" : "mm",
+    "smoothing" : 4.0
+  }, {
+    "scale" : 1.0,
+    "unit" : "mm",
+    "smoothing" : 40.0
+  }, {
+    "scale" : 1.0,
+    "unit" : "mm",
+    "smoothing" : 4.0
+  } ]
 }

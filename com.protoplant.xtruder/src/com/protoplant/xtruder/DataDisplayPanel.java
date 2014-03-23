@@ -26,7 +26,7 @@ public class DataDisplayPanel extends Group {
 	private Label lblMax;
 	private Label lblMin;
 	private Button btnReset;
-	private float testValue;
+	private float curValue;
 	private float minValue;
 	private float maxValue;
 	
@@ -80,24 +80,39 @@ public class DataDisplayPanel extends Group {
 	@Subscribe
 	public void onDataRx(SerialDataRxEvent evt) {
 		int offset = index*2;  // data is two bytes long
-		float scale = config.displays[index].scale;
-		int curValue = (evt.getByte(offset)<<8)|evt.getByte(offset+1);
-		if (signed) curValue = (short)curValue;  // make signed
 		
-		updateDisplay((float)curValue*scale);
+		if (offset==0) offset=2;   										////////////////////////    TEST
+		
+		float scale = config.displays[index].scale;
+		int data = (evt.getByte(offset)<<8)|evt.getByte(offset+1);
+		if (signed) data = (short)data;  // make signed
+		
+		calcRunningAverage((float)data*scale);
+		updateDisplay();
+		
 //		System.out.println("> "+curValue);
 	}
 	
+	private void calcRunningAverage(float sample) {
+		if (config.displays[index].smoothing >= 1.0) {
+			float offset = sample-curValue;
+			curValue+=offset/config.displays[index].smoothing;
+		} else {
+			curValue = sample;
+		}
+	}
+
+
 //	@Subscribe
 //	public void onMpgStepEvent(MpgStepEvent event) {			////////////////////////    TEST
 //		testValue+=(float)event.getStep()*0.01;
 //		updateDisplay(testValue);
 //	}
 	
-	public void updateDisplay(float value) {
-		if (value>maxValue) maxValue = value;
-		if (value<minValue) minValue = value;
-		lblData.setText(String.format("%.4f", value)+" "+config.displays[index].unit);
+	public void updateDisplay() {
+		if (curValue>maxValue) maxValue = curValue;
+		if (curValue<minValue) minValue = curValue;
+		lblData.setText(String.format("%.4f", curValue)+" "+config.displays[index].unit);
 		lblMin.setText(String.format("%.4f", minValue));
 		lblMax.setText(String.format("%.4f", maxValue));
 	}
