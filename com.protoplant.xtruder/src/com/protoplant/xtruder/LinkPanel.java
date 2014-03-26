@@ -118,7 +118,7 @@ public class LinkPanel extends Group {
 			if (event.getState()==MotorState.SPEED) {
 				if (isLinked && ratio>=0) {
 					float speed = srcMotor.getSpeed()*ratio;
-					dstMotor.setSpeed(speed, false);
+					dstMotor.setSpeed(speed, true);
 				} else {
 					calcRatio();
 				}

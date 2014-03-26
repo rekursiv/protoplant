@@ -96,8 +96,8 @@ public class CoilMassPanel extends Group {
 		
 		grpMaterial = new Group(this, SWT.NONE);
 		FormData fd_grpMaterial = new FormData();
-		fd_grpMaterial.right = new FormAttachment(0, 260);
-		fd_grpMaterial.left = new FormAttachment(0, 15);
+		fd_grpMaterial.right = new FormAttachment(0, 257);
+		fd_grpMaterial.left = new FormAttachment(0, 12);
 		grpMaterial.setLayoutData(fd_grpMaterial);
 		FillLayout fl_grpMaterial = new FillLayout(SWT.HORIZONTAL);
 		fl_grpMaterial.marginWidth = 5;
