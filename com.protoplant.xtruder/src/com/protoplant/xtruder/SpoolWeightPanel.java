@@ -259,7 +259,7 @@ public class SpoolWeightPanel extends Group implements Runnable {
 	}
 	
 	private void updateAudio250g() {
-		if (checkpoint(200)) am.playClip("200g");
+		if (checkpoint(200)) am.playClip("200g");  //  
 		else if (checkpoint(240)) am.playClip("240g");
 		else if (checkpoint(245)) am.playClip("5");
 		else if (checkpoint(246)) am.playClip("4");
@@ -270,7 +270,7 @@ public class SpoolWeightPanel extends Group implements Runnable {
 	}
 	
 	private void updateAudio1kg() {
-		if (checkpoint(900)) am.playClip("900g");
+		if (checkpoint(900)) am.playClip("900g");  //  970
 		else if (checkpoint(990)) am.playClip("990g");
 		else if (checkpoint(995)) am.playClip("5");
 		else if (checkpoint(996)) am.playClip("4");

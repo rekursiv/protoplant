@@ -9,6 +9,7 @@ import org.eclipse.swt.widgets.Group;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
+import com.protoplant.xtruder.audio.AudioManager;
 
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Label;
@@ -27,6 +28,7 @@ public class FaultPanel extends Group {
 	
 	private int overCount = 0;
 	private int underCount = 0;
+	private AudioManager am;
 
 	public FaultPanel(Composite parent, Injector injector) {
 		super(parent, SWT.NONE);
@@ -68,15 +70,21 @@ public class FaultPanel extends Group {
 	}
 	
 	@Inject
-	public void inject(Logger log) {
+	public void inject(Logger log, AudioManager am) {
 		this.log = log;
+		this.am = am;
 	}
 	
 	@Subscribe
 	public void onFault(LaserEvent evt) {
-		if (evt.isOver) ++overCount;
-		else ++underCount;
+		if (evt.isOver) {
+			++overCount;
+		}
+		else {
+			++underCount;
+		}
 		updateDisplay();
+		am.playClip("doh");
 	}
 	
 	private void updateDisplay() {

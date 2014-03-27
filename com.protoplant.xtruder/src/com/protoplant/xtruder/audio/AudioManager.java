@@ -21,26 +21,24 @@ public class AudioManager {
 	}	
 	
 	public void init() {
-//		addClip("200g");  // won't fit in pi memory??
+		addClip("200g");
+		addClip("220g");
 		addClip("240g");
-//		addClip("900g");
+		addClip("950g");
+		addClip("970g");
 		addClip("990g");
-//		addClip("5");
-//		addClip("4");
+		addClip("5");
+		addClip("4");
 		addClip("3");
 		addClip("2");
 		addClip("1");
 		addClip("mark");
 		addClip("starvin");
+		addClip("doh");
 	}
 	
 	public void addClip(String name) {
 		AudioClip clip = new AudioClip(name+".wav");
-		try {
-			clip.load();
-		} catch (Exception e) {
-			log.log(Level.WARNING, "Error loading clip: ", e);
-		}
 		clipMap.put(name, clip);
 	}
 	

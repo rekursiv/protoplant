@@ -235,6 +235,7 @@ public class CoilMassPanel extends Group {
 	
 	private void updateAudio250g() {
 		if (checkpoint(200)) am.playClip("200g");
+		else if (checkpoint(220)) am.playClip("220g");
 		else if (checkpoint(240)) am.playClip("240g");
 		else if (checkpoint(245)) am.playClip("5");
 		else if (checkpoint(246)) am.playClip("4");
@@ -243,9 +244,10 @@ public class CoilMassPanel extends Group {
 		else if (checkpoint(249)) am.playClip("1");
 		else if (checkpoint(0)) am.playClip("mark");
 	}
-	
+
 	private void updateAudio1kg() {
-		if (checkpoint(900)) am.playClip("900g");
+		if (checkpoint(950)) am.playClip("950g");   
+		else if (checkpoint(970)) am.playClip("970g");
 		else if (checkpoint(990)) am.playClip("990g");
 		else if (checkpoint(995)) am.playClip("5");
 		else if (checkpoint(996)) am.playClip("4");
@@ -266,13 +268,25 @@ public class CoilMassPanel extends Group {
 		// Disable the check that prevents subclassing of SWT components
 	}
 
-
 	public void test() {
-//		log.info("data period="+delay);
 		config.cfplaDensity = 30;
 //		grams = 242;
 //		prevGrams = grams;
 //		lblData.setText(String.format("%.2f g", grams));
 //		am.playClip("mark");
 	}
+	
+	public void _test() {
+		if (rb250g.getSelection()) {
+			if (rbPcabs.getSelection()) am.playClip("200g");
+			else if (rbHtpla.getSelection()) am.playClip("240g");
+			else if (rbCfpla.getSelection()) am.playClip("5");
+		}
+		else if (rb1kg.getSelection()) {
+			if (rbPcabs.getSelection()) am.playClip("900g");
+			else if (rbHtpla.getSelection()) am.playClip("990g");
+			else if (rbCfpla.getSelection()) am.playClip("mark");
+		}
+	}
+	
 }
