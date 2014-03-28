@@ -269,7 +269,7 @@ public class CoilMassPanel extends Group {
 	}
 
 	public void test() {
-		config.cfplaDensity = 30;
+//		config.cfplaDensity = 30;
 //		grams = 242;
 //		prevGrams = grams;
 //		lblData.setText(String.format("%.2f g", grams));

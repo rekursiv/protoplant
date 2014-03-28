@@ -15,7 +15,7 @@ public class XtruderApp {
 	
 	
 	public static void main(String[] args) {
-//		runRemote();
+		runRemote();
 		System.getProperties().setProperty("java.util.logging.config.class", "util.logging.LogSetup");
 		XtruderApp instance = new XtruderApp();
 		instance.init();
@@ -58,7 +58,7 @@ public class XtruderApp {
 		new RootPanel(shell, SWT.NONE, injector);
 		
 		
-		StepperatureInput mpg = injector.getInstance(StepperatureInput.class);
+		PiGpio mpg = injector.getInstance(PiGpio.class);
 		
 		StSmc smc = injector.getInstance(StSmc.class);
 		smc.initSpi();
@@ -88,7 +88,7 @@ public class XtruderApp {
 //		clt.loop();
 
 		Injector injector = Guice.createInjector(new FastLoadModule());
-		injector.getInstance(StepperatureInput.class);
+		injector.getInstance(PiGpio.class);
 		
 		while (true) {
 			try {

@@ -40,7 +40,7 @@ public class ControlPanel extends Composite {
 
 	private Logger log;
 	private EventBus eb;
-	private StepperatureInput mpg;
+	private PiGpio io;
 	private Button btnExit;
 	private Button btnTest;
 	private Button btnReloadConfig;
@@ -165,7 +165,7 @@ public class ControlPanel extends Composite {
 			@Override
 			public void mouseScrolled(MouseEvent evt) {
 //				log.info(evt.toString());
-				mpg.simulateStep(evt.count);
+				io.simulateStep(evt.count);
 			}
 		});
 
@@ -173,11 +173,11 @@ public class ControlPanel extends Composite {
 	}
 	
 	@Inject
-	public void inject(Logger log, EventBus eb, StSmc st, StepperatureInput mpg) {
+	public void inject(Logger log, EventBus eb, StSmc st, PiGpio io) {
 		this.log = log;
 		this.eb = eb;
 		this.st = st;
-		this.mpg = mpg;
+		this.io = io;
 	}
 	
 	public void startAll() {

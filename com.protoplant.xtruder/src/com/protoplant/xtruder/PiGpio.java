@@ -17,9 +17,8 @@ import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
 import com.pi4j.io.gpio.event.GpioPinListenerDigital;
 import com.pi4j.wiringpi.Gpio;
 
-//  TODO:  change name to "GPIO"
 @Singleton
-public class StepperatureInput implements GpioPinListenerDigital, Runnable {
+public class PiGpio implements GpioPinListenerDigital, Runnable {
 	
 	protected GpioController gpio=null;
 	protected GpioPinDigitalInput stepA=null;
@@ -38,7 +37,7 @@ public class StepperatureInput implements GpioPinListenerDigital, Runnable {
 	
 	
 	@Inject
-	public StepperatureInput(Logger log, EventBus eb)  {
+	public PiGpio(Logger log, EventBus eb)  {
 		
 		this.log = log;
 		this.eb = eb;

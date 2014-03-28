@@ -1,10 +1,12 @@
 
+
+try to fix stepperature bug - error adds up after long time of not touching
+
 winder minder:
   fix switch bounce issue
 
 log data (diameter, pressure, etc)
 
-back up pi OS
 
 
 

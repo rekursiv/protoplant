@@ -81,7 +81,7 @@ public class DataDisplayPanel extends Group {
 	public void onDataRx(SerialDataRxEvent evt) {
 		int offset = index*2;  // data is two bytes long
 		
-		if (offset==0) offset=2;   										////////////////////////    TEST
+//		if (offset==0) offset=2;   										////////////////////////    TEST
 		
 		float scale = config.displays[index].scale;
 		int data = (evt.getByte(offset)<<8)|evt.getByte(offset+1);

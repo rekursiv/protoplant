@@ -33,7 +33,7 @@ public class FaultPanel extends Group {
 	public FaultPanel(Composite parent, Injector injector) {
 		super(parent, SWT.NONE);
 		setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
-		setText("Faults");
+		setText("Laser Faults");
 		
 		btnReset = new Button(this, SWT.NONE);
 		btnReset.addSelectionListener(new SelectionAdapter() {
