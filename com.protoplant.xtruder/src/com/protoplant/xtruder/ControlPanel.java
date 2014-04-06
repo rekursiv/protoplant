@@ -146,19 +146,18 @@ public class ControlPanel extends Composite {
 				btnTest.setFont(SWTResourceManager.getFont("Segoe UI", 15, SWT.NORMAL));
 				btnTest.setText("Test");
 				
-						btnExit = new Button(grpGlobalControls, SWT.NONE);
-						btnExit.setBounds(625, 33, 78, 58);
-						btnExit.addSelectionListener(new SelectionAdapter() {
-							@Override
-							public void widgetSelected(SelectionEvent arg0) {
-								stopAll();
-								winderMinder.destroy();
-								try {Thread.sleep(200);} catch (InterruptedException e) {}  // give things a chance to shut down
-								getShell().dispose();
-							}
-						});
-						btnExit.setText("Exit");
-						btnExit.setFont(SWTResourceManager.getFont("Segoe UI", 15, SWT.NORMAL));
+				btnExit = new Button(grpGlobalControls, SWT.NONE);
+				btnExit.setBounds(625, 33, 78, 58);
+				btnExit.addSelectionListener(new SelectionAdapter() {
+					@Override
+					public void widgetSelected(SelectionEvent arg0) {
+						stopAll();
+						winderMinder.destroy();
+						getShell().dispose();
+					}
+				});
+				btnExit.setText("Exit");
+				btnExit.setFont(SWTResourceManager.getFont("Segoe UI", 15, SWT.NORMAL));
 		
 		//  for testing without Stepperature
 		this.addMouseWheelListener(new MouseWheelListener() {

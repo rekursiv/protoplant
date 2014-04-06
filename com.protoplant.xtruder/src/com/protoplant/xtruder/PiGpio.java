@@ -84,7 +84,7 @@ public class PiGpio implements GpioPinListenerDigital, Runnable {
 	public void destroy() {
 		isActive  = false;
 		if (thread!=null) thread.interrupt();
-		try {Thread.sleep(200);} catch (InterruptedException e) {}  // give things a chance to shut down
+//		try {Thread.sleep(200);} catch (InterruptedException e) {}  // give things a chance to shut down
 		if (gpio!=null) gpio.shutdown();
 		log.info("");
 	}

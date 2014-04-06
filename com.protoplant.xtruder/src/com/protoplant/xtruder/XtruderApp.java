@@ -21,6 +21,7 @@ public class XtruderApp {
 		instance.init();
 //		instance.test();
 		System.out.println("Bye.");
+		System.exit(0);
 	}
 	
 	private static void runRemote() {
