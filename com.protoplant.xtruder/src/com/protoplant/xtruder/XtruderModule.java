@@ -62,7 +62,7 @@ public class XtruderModule extends AbstractModule {
 		// setup logging to file
 		if (config.logToFile) {
 			try {
-				LogManager.getLogManager().getLogger("").addHandler(new FileHandler("log/rti-ui-%u-%g.log", 0, 10));
+				LogManager.getLogManager().getLogger("").addHandler(new FileHandler("log/xtruder-%u-%g.log", 0, 10));
 			} catch (SecurityException e) {
 				e.printStackTrace();
 			} catch (IOException e) {

@@ -15,7 +15,7 @@ public class XtruderApp {
 	
 	
 	public static void main(String[] args) {
-		runRemote();
+//		runRemote();
 		System.getProperties().setProperty("java.util.logging.config.class", "util.logging.LogSetup");
 		XtruderApp instance = new XtruderApp();
 		instance.init();
@@ -51,7 +51,7 @@ public class XtruderApp {
 		
 		// touchscreen is 1280 X 800
 		shell.setSize(1280, 800);
-		shell.setText("Protoplant Xtruder V1.4");
+		shell.setText("Protoplant Xtruder V1.5");
 		shell.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
 		Injector injector = Guice.createInjector(new XtruderModule());

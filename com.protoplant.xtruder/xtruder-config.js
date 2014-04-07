@@ -3,7 +3,7 @@
   "cfgSaveToFile" : null,
   "cfgLoadFromFile" : null,
   "logToConsole" : true,
-  "logToFile" : true,
+  "logToFile" : false,
   "showLogView" : true,
   "pcabsDensity" : 1.13,
   "htplaDensity" : 1.28,
