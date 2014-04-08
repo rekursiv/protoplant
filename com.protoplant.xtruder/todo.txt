@@ -1,8 +1,23 @@
 
 
-
+set density dialog in mass panel
 
 log data (diameter, pressure, etc)
+
+
+---
+
+backup config
+
+run on startup
+
+===
+
+auto-adjust motor speed based on diameter
+
+USB scale
+  log data
+  auto-adjust density
 
 
 
@@ -24,4 +39,4 @@ rate of indicator data tx = 10hz
 density:
   pcabs = 1.13
   hitemp pla = 1.28
-
+  CFPLA = 1.12

@@ -174,9 +174,9 @@ public class MotorPanel extends Group {
 		if (newSpeed!=speed) {
 			speed=newSpeed;
 			speedMotorUnits=(int)(newSpeed*speedScaleFactor);
-			if (speedMotorUnits<0) {
-				speedMotorUnits=0;
-				speed=0;
+			if (speedMotorUnits<1) {
+				speedMotorUnits=1;
+				speed=1/speedScaleFactor;
 			}
 			else if (speedMotorUnits>maxSpeedMotorUnits) {
 				speedMotorUnits=maxSpeedMotorUnits;

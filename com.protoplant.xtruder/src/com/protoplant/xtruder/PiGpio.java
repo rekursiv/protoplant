@@ -24,7 +24,7 @@ public class PiGpio implements GpioPinListenerDigital, Runnable {
 	protected GpioPinDigitalInput stepA=null;
 	protected GpioPinDigitalInput stepB=null;
 	protected GpioPinDigitalInput laserOver=null;
-	protected GpioPinDigitalInput laserUnder;
+	protected GpioPinDigitalInput laserUnder=null;
 	
 	private volatile Thread thread = null;
 	protected volatile long prevStepTime = 0;
