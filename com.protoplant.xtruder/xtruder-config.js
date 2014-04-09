@@ -7,7 +7,7 @@
   "showLogView" : true,
   "pcabsDensity" : 1.13,
   "htplaDensity" : 1.28,
-  "cfplaDensity" : 1.0,
+  "cfplaDensity" : 1.14,
   "motors" : [ {
 	    "speedInit" : 10.0,
 	    "speedScale" : 2890.0

@@ -1,11 +1,14 @@
 
+take out dataDisplay mouse wheel test code
 
-set density dialog in mass panel
+log data on reset coil count
 
-log data (diameter, pressure, etc)
+auto-adjust motor speed based on diameter
+  separate running avg in coil mgr???
 
+mkdir data, test
 
----
+---------------------
 
 backup config
 
@@ -13,7 +16,7 @@ run on startup
 
 ===
 
-auto-adjust motor speed based on diameter
+
 
 USB scale
   log data

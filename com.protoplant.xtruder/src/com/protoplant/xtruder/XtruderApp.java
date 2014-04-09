@@ -51,7 +51,7 @@ public class XtruderApp {
 		
 		// touchscreen is 1280 X 800
 		shell.setSize(1280, 800);
-		shell.setText("Protoplant Xtruder V1.5");
+		shell.setText("Protoplant Xtruder V1.6");
 		shell.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
 		Injector injector = Guice.createInjector(new XtruderModule());
@@ -66,10 +66,11 @@ public class XtruderApp {
 		smc.initAllBoards();
 		
 		AudioManager am = injector.getInstance(AudioManager.class);
-		HopperAlarm hopperAlarm = injector.getInstance(HopperAlarm.class);
-
+//		HopperAlarm hopperAlarm = injector.getInstance(HopperAlarm.class);
 		SerialPortManager spm = injector.getInstance(SerialPortManager.class);
 		spm.init();
+		DataLogger dl = injector.getInstance(DataLogger.class);
+		dl.init();
 
 		
 		shell.init();  // main loop
@@ -77,6 +78,7 @@ public class XtruderApp {
 		mpg.destroy();
 		spm.destroy();
 		am.destroy();
+		dl.destroy();
 
 	}
 

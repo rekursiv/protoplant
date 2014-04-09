@@ -13,10 +13,12 @@ import org.eclipse.swt.widgets.Composite;
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
+import com.protoplant.xtruder.audio.HopperAlarm;
 
 import org.eclipse.wb.swt.SWTResourceManager;
 
 import util.config.ConfigManager;
+
 import org.eclipse.swt.widgets.Group;
 
 public class ControlPanel extends Composite {
@@ -45,6 +47,8 @@ public class ControlPanel extends Composite {
 	private Button btnTest;
 	private Button btnReloadConfig;
 	private Group grpGlobalControls;
+	private DataLogger dl;
+	private Button btnAudrey;
 
 
 
@@ -73,7 +77,7 @@ public class ControlPanel extends Composite {
 		linkMotor2_4.link();
 		
 		coilMass = new CoilMassPanel(this, injector, motor2);
-		coilMass.setBounds(739, 10, 350, 327);
+		coilMass.setBounds(739, 10, 459, 327);
 
 		data1 = new DataDisplayPanel(this, injector, "Indicator", 0, true);
 		data1.setBounds(373, 121, 350, 105);
@@ -140,7 +144,7 @@ public class ControlPanel extends Composite {
 				btnTest.addSelectionListener(new SelectionAdapter() {
 					@Override
 					public void widgetSelected(SelectionEvent arg0) {
-						coilMass.test();
+						dl.test();
 					}
 				});
 				btnTest.setFont(SWTResourceManager.getFont("Segoe UI", 15, SWT.NORMAL));
@@ -158,6 +162,11 @@ public class ControlPanel extends Composite {
 				});
 				btnExit.setText("Exit");
 				btnExit.setFont(SWTResourceManager.getFont("Segoe UI", 15, SWT.NORMAL));
+				
+				btnAudrey = new HopperAlarm(grpGlobalControls, injector);
+				btnAudrey.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
+				btnAudrey.setBounds(429, 50, 93, 28);
+				btnAudrey.setText("Audrey");
 		
 		//  for testing without Stepperature
 		this.addMouseWheelListener(new MouseWheelListener() {
@@ -172,11 +181,12 @@ public class ControlPanel extends Composite {
 	}
 	
 	@Inject
-	public void inject(Logger log, EventBus eb, StSmc st, PiGpio io) {
+	public void inject(Logger log, EventBus eb, StSmc st, PiGpio io, DataLogger dl) {
 		this.log = log;
 		this.eb = eb;
 		this.st = st;
 		this.io = io;
+		this.dl = dl;
 	}
 	
 	public void startAll() {
