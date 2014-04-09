@@ -27,15 +27,13 @@
 	  "displays" : [ {
 	    "scale" : 0.01,
 	    "unit" : "mm",
-		"smoothing" : 4.0
+		"smoothing" : 8.0,
+	    "delta" : 0.01
 	  }, {
 	    "scale" : 3.363288,
 	    "unit" : "psi",
-		"smoothing" : 4.0
-	  }, {
-	    "scale" : 0.09777,
-	    "unit" : "mm",
-		"smoothing" : 4.0
+		"smoothing" : 16.0,
+	    "delta" : 10.0
 	  } ]
 }
 

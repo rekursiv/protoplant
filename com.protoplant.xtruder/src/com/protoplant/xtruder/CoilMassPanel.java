@@ -48,6 +48,8 @@ public class CoilMassPanel extends Group {
 	private volatile boolean isMotorRunning = false;
 	private volatile long prevStepTime = 0;
 	private volatile float density=0;
+	private volatile float diameter=0;
+	private volatile float diameterUpdateCount=0;
 	
 	private Button rb250g;
 	private Button rb1kg;
@@ -72,8 +74,7 @@ public class CoilMassPanel extends Group {
 	private Button button_1;
 	private Button btnFeedback;
 
-		
-	
+
 	public CoilMassPanel(Composite parent, Injector injector, MotorPanel refMotor) {   //  350 x 327
 		super(parent, SWT.NONE);
 		
@@ -209,7 +210,8 @@ public class CoilMassPanel extends Group {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				density=(float)spnDensity.getSelection()/100.0f;
-				log.info(""+density);
+				dl.write("Density", ""+density);
+//				log.info(""+density);
 			}
 		});
 		spnDensity.setMaximum(300);
@@ -219,7 +221,8 @@ public class CoilMassPanel extends Group {
 		btnResetCount.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				spnCount.setSelection(0);
+				spnCount.setSelection(1);
+				dl.write("Coil", "1", String.format("%.2f", grams));
 			}
 		});
 		btnResetCount.setText("Reset");
@@ -270,6 +273,7 @@ public class CoilMassPanel extends Group {
 	protected void setDensity(float density) {
 		this.density = density;
 		spnDensity.setSelection((int)(density*100));
+		dl.write("Density", ""+density);
 	}
 
 
@@ -300,7 +304,6 @@ public class CoilMassPanel extends Group {
 				stop();
 			}
 		}
-
 	}
 	
 	public void reloadConfig() {
@@ -311,23 +314,31 @@ public class CoilMassPanel extends Group {
 		isMotorRunning = true;
 	}
 	
-	
 	public void stop() {
 		isMotorRunning = false;
 	}
 	
-	@Subscribe
-	public void onDataRx(final SerialDataRxEvent evt) {
-		if (!isMotorRunning) return;
-		Display.getDefault().asyncExec(new Runnable() {
-			@Override
-			public void run() {
-				float scale = config.displays[0].scale;
-				int curValue = (evt.getByte(0)<<8)|evt.getByte(1);
-				curValue = (short)curValue;  // make signed
-				calcMass((float)curValue*scale);
+	public void setDiameter(float diameter) {
+		this.diameter = diameter;
+		if (isMotorRunning) {
+			calcMass(diameter);
+			if (diameterUpdateCount>20) {
+				diameterUpdateCount=0;
+				if (btnFeedback.getSelection()) doFeedback();
+			} else {
+				++diameterUpdateCount;
 			}
-		});
+		}
+	}
+	
+	public void doFeedback() {
+		float delta = diameter-1.73f;      //  FIXME
+		if (Math.abs(delta)<0.02) return;
+		if (delta>0.1f) delta=0.1f;
+		else if (delta<-0.1f) delta=-0.1f;
+		delta*=0.01;
+		refMotor.nudgeSpeed(delta);
+		log.info(""+delta);
 	}
 	
 	private void calcMass(float diameter) {
@@ -403,24 +414,4 @@ public class CoilMassPanel extends Group {
 		// Disable the check that prevents subclassing of SWT components
 	}
 
-	public void test() {
-//		config.cfplaDensity = 30;
-//		grams = 242;
-//		prevGrams = grams;
-//		lblData.setText(String.format("%.2f g", grams));
-//		am.playClip("mark");
-	}
-	
-	public void _test() {
-		if (rb250g.getSelection()) {
-			if (rbPcabs.getSelection()) am.playClip("200g");
-			else if (rbHtpla.getSelection()) am.playClip("240g");
-			else if (rbCfpla.getSelection()) am.playClip("5");
-		}
-		else if (rb1kg.getSelection()) {
-			if (rbPcabs.getSelection()) am.playClip("900g");
-			else if (rbHtpla.getSelection()) am.playClip("990g");
-			else if (rbCfpla.getSelection()) am.playClip("mark");
-		}
-	}
 }

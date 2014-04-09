@@ -1,12 +1,6 @@
 
-take out dataDisplay mouse wheel test code
 
-log data on reset coil count
 
-auto-adjust motor speed based on diameter
-  separate running avg in coil mgr???
-
-mkdir data, test
 
 ---------------------
 

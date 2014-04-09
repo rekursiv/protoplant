@@ -32,6 +32,7 @@ public class DataLogger {
 			writer = new CSVWriter(new FileWriter("data/"+getTimeStamp()+".csv"), ',');
 		} catch (IOException e) {
 			log.log(Level.WARNING, "", e);
+			return;
 		}
 		writer.writeNext(new String[]{"Timestamp", "Type", "Data1", "Data2", "Data3"});
 	}
@@ -58,7 +59,7 @@ public class DataLogger {
 	
 	public void write(String[] line) {
 		if (writer!=null) writer.writeNext(line);
-		log.info(Arrays.toString(line));
+//		log.info(Arrays.toString(line));
 	}
 	
 	@Subscribe

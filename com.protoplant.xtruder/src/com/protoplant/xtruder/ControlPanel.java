@@ -36,7 +36,7 @@ public class ControlPanel extends Composite {
 	private Button btnReinitMotors;
 	
 	private StSmc st;
-	private DataDisplayPanel data1;
+	private DataDisplayPanel pnlDiameter;
 	private DataDisplayPanel data2;
 	private FaultPanel fault;
 
@@ -76,11 +76,11 @@ public class ControlPanel extends Composite {
 		linkMotor2_4.setBounds(373, 232, 350, 105);
 		linkMotor2_4.link();
 		
-		coilMass = new CoilMassPanel(this, injector, motor2);
+		coilMass = new CoilMassPanel(this, injector, motor3);
 		coilMass.setBounds(739, 10, 459, 327);
 
-		data1 = new DataDisplayPanel(this, injector, "Indicator", 0, true);
-		data1.setBounds(373, 121, 350, 105);
+		pnlDiameter = new DiameterDisplayPanel(this, injector, coilMass);
+		pnlDiameter.setBounds(373, 121, 350, 105);
 		data2 = new DataDisplayPanel(this, injector, "Pressure", 1, false);
 		data2.setBounds(10, 10, 350, 105);
 		fault = new FaultPanel(this, injector);
@@ -106,73 +106,72 @@ public class ControlPanel extends Composite {
 		grpGlobalControls.setText("Global Controls");
 		grpGlobalControls.setBounds(10, 458, 713, 101);
 		
-				btnStopAll = new Button(grpGlobalControls, SWT.NONE);
-				btnStopAll.setBounds(10, 33, 120, 58);
-				btnStopAll.addSelectionListener(new SelectionAdapter() {
-					@Override
-					public void widgetSelected(SelectionEvent arg0) {
-						stopAll();
-					}
-				});
-				btnStopAll.setFont(SWTResourceManager.getFont("Segoe UI", 15, SWT.NORMAL));
-				btnStopAll.setText("Stop All");
-				
-				btnRunAll = new Button(grpGlobalControls, SWT.NONE);
-				btnRunAll.setBounds(136, 33, 120, 58);
-				btnRunAll.addSelectionListener(new SelectionAdapter() {
-					@Override
-					public void widgetSelected(SelectionEvent arg0) {
-						startAll();
-					}
-				});
-				btnRunAll.setFont(SWTResourceManager.getFont("Segoe UI", 15, SWT.NORMAL));
-				btnRunAll.setText("Run All");
-				
-				btnReinitMotors = new Button(grpGlobalControls, SWT.NONE);
-				btnReinitMotors.setBounds(262, 33, 150, 58);
-				btnReinitMotors.addSelectionListener(new SelectionAdapter() {
-					@Override
-					public void widgetSelected(SelectionEvent arg0) {
-						st.initAllBoards();
-					}
-				});
-				btnReinitMotors.setText("Re-Init Motors");
-				btnReinitMotors.setFont(SWTResourceManager.getFont("Segoe UI", 15, SWT.NORMAL));
-				
-				btnTest = new Button(grpGlobalControls, SWT.NONE);
-				btnTest.setBounds(541, 33, 78, 58);
-				btnTest.addSelectionListener(new SelectionAdapter() {
-					@Override
-					public void widgetSelected(SelectionEvent arg0) {
-						dl.test();
-					}
-				});
-				btnTest.setFont(SWTResourceManager.getFont("Segoe UI", 15, SWT.NORMAL));
-				btnTest.setText("Test");
-				
-				btnExit = new Button(grpGlobalControls, SWT.NONE);
-				btnExit.setBounds(625, 33, 78, 58);
-				btnExit.addSelectionListener(new SelectionAdapter() {
-					@Override
-					public void widgetSelected(SelectionEvent arg0) {
-						stopAll();
-						winderMinder.destroy();
-						getShell().dispose();
-					}
-				});
-				btnExit.setText("Exit");
-				btnExit.setFont(SWTResourceManager.getFont("Segoe UI", 15, SWT.NORMAL));
-				
-				btnAudrey = new HopperAlarm(grpGlobalControls, injector);
-				btnAudrey.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
-				btnAudrey.setBounds(429, 50, 93, 28);
-				btnAudrey.setText("Audrey");
+		btnStopAll = new Button(grpGlobalControls, SWT.NONE);
+		btnStopAll.setBounds(10, 33, 120, 58);
+		btnStopAll.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				stopAll();
+			}
+		});
+		btnStopAll.setFont(SWTResourceManager.getFont("Segoe UI", 15, SWT.NORMAL));
+		btnStopAll.setText("Stop All");
+		
+		btnRunAll = new Button(grpGlobalControls, SWT.NONE);
+		btnRunAll.setBounds(136, 33, 120, 58);
+		btnRunAll.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				startAll();
+			}
+		});
+		btnRunAll.setFont(SWTResourceManager.getFont("Segoe UI", 15, SWT.NORMAL));
+		btnRunAll.setText("Run All");
+		
+		btnReinitMotors = new Button(grpGlobalControls, SWT.NONE);
+		btnReinitMotors.setBounds(262, 33, 150, 58);
+		btnReinitMotors.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				st.initAllBoards();
+			}
+		});
+		btnReinitMotors.setText("Re-Init Motors");
+		btnReinitMotors.setFont(SWTResourceManager.getFont("Segoe UI", 15, SWT.NORMAL));
+		
+		btnTest = new Button(grpGlobalControls, SWT.NONE);
+		btnTest.setBounds(541, 33, 78, 58);
+		btnTest.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				dl.test();
+			}
+		});
+		btnTest.setFont(SWTResourceManager.getFont("Segoe UI", 15, SWT.NORMAL));
+		btnTest.setText("Test");
+		
+		btnExit = new Button(grpGlobalControls, SWT.NONE);
+		btnExit.setBounds(625, 33, 78, 58);
+		btnExit.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				stopAll();
+				winderMinder.destroy();
+				getShell().dispose();
+			}
+		});
+		btnExit.setText("Exit");
+		btnExit.setFont(SWTResourceManager.getFont("Segoe UI", 15, SWT.NORMAL));
+		
+		btnAudrey = new HopperAlarm(grpGlobalControls, injector);
+		btnAudrey.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
+		btnAudrey.setBounds(429, 50, 93, 28);
+		btnAudrey.setText("Audrey");
 		
 		//  for testing without Stepperature
 		this.addMouseWheelListener(new MouseWheelListener() {
 			@Override
 			public void mouseScrolled(MouseEvent evt) {
-//				log.info(evt.toString());
 				io.simulateStep(evt.count);
 			}
 		});

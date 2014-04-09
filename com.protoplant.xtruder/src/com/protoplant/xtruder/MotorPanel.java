@@ -165,6 +165,10 @@ public class MotorPanel extends Group {
 		eb.post(new PanelFocusEvent(this));
 		return true;
 	}
+	
+	public void nudgeSpeed(float delta) {
+		setSpeed(speed+delta);
+	}
 
 	public void setSpeed(float newSpeed) {
 		setSpeed(newSpeed, true);

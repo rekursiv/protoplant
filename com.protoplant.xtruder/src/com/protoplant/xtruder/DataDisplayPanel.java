@@ -27,12 +27,13 @@ public class DataDisplayPanel extends Group {
 	private Label lblPrevMax;
 	private Label lblPrevMin;
 	private Button btnReset;
-	private float curValue;
-	private float minValue;
-	private float maxValue;
 	private DataLogger dl;
 	private Label lblMax;
 	private Label lblMin;
+	protected float curValue;
+	protected float prevValue;
+	protected float minValue;
+	protected float maxValue;
 	
 	
 	public DataDisplayPanel(Composite parent, Injector injector, String label, int index, boolean signed) {
@@ -105,10 +106,10 @@ public class DataDisplayPanel extends Group {
 		if (signed) data = (short)data;  // make signed
 		
 		calcRunningAverage((float)data*scale);
-		updateDisplay();
+		updateValues();
 	}
 	
-	private void calcRunningAverage(float sample) {
+	protected void calcRunningAverage(float sample) {
 		if (config.displays[index].smoothing >= 1.0) {
 			float offset = sample-curValue;
 			curValue+=offset/config.displays[index].smoothing;
@@ -121,14 +122,8 @@ public class DataDisplayPanel extends Group {
 	public void onCoilReset(CoilResetEvent event) {
 		reset();
 	}
-
-	@Subscribe
-	public void onMpgStepEvent(MpgStepEvent event) {			////////////////////////    TEST
-		calcRunningAverage((float)event.getStep()*0.01f);
-		updateDisplay();
-	}
 	
-	public void updateDisplay() {
+	protected void updateValues() {
 		if (curValue>maxValue) {
 			maxValue = curValue;
 			lblMax.setText(String.format("%.2f", maxValue));
@@ -138,9 +133,13 @@ public class DataDisplayPanel extends Group {
 			lblMin.setText(String.format("%.2f", minValue));
 		}
 		
-		String data = String.format("%.2f", curValue)+" "+config.displays[index].unit;
-		if (data.compareTo(lblData.getText())!=0) {
-			lblData.setText(data);
+		lblData.setText(String.format("%.2f", curValue)+" "+config.displays[index].unit);
+		logData();
+	}
+	
+	protected void logData() {
+		if (Math.abs(curValue-prevValue)>config.displays[index].delta) {
+			prevValue=curValue;
 			dl.write(label, String.format("%.2f", curValue));
 		}
 	}
