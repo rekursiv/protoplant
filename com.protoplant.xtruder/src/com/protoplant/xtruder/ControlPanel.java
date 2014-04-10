@@ -164,6 +164,7 @@ public class ControlPanel extends Composite {
 		btnExit.setFont(SWTResourceManager.getFont("Segoe UI", 15, SWT.NORMAL));
 		
 		btnAudrey = new HopperAlarm(grpGlobalControls, injector);
+		btnAudrey.setSelection(false);
 		btnAudrey.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
 		btnAudrey.setBounds(429, 50, 93, 28);
 		btnAudrey.setText("Audrey");

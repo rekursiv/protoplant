@@ -7,7 +7,12 @@
   "showLogView" : true,
   "pcabsDensity" : 1.13,
   "htplaDensity" : 1.28,
-  "cfplaDensity" : 1.14,
+  "cfplaDensity" : 1.20,
+  "fbTarget175" : 1.73,
+  "fbTarget285" : 2.85,
+  "fbDeadband" : 0.01,
+  "fbSpread" : 0.1,
+  "fbNudgeFactor" : 0.05,
   "motors" : [ {
 	    "speedInit" : 10.0,
 	    "speedScale" : 2890.0

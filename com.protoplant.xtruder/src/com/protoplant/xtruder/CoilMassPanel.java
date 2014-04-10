@@ -50,6 +50,7 @@ public class CoilMassPanel extends Group {
 	private volatile float density=0;
 	private volatile float diameter=0;
 	private volatile float diameterUpdateCount=0;
+	private volatile int fbCenterCount=0;
 	
 	private Button rb250g;
 	private Button rb1kg;
@@ -70,9 +71,11 @@ public class CoilMassPanel extends Group {
 	private DataLogger dl;
 	private Spinner spnDensity;
 	private Group grpTargetDiameter;
-	private Button button;
-	private Button button_1;
+	private Button rbnTd175;
+	private Button rbnTd285;
 	private Button btnFeedback;
+	private Label lblFbPrevNudge;
+	private Label lblFbCnt;
 
 
 	public CoilMassPanel(Composite parent, Injector injector, MotorPanel refMotor) {   //  350 x 327
@@ -245,17 +248,25 @@ public class CoilMassPanel extends Group {
 		fd_grpTargetDiameter.left = new FormAttachment(spnCount);
 		grpTargetDiameter.setLayoutData(fd_grpTargetDiameter);
 		
-		button = new Button(grpTargetDiameter, SWT.RADIO);
-		button.setFont(SWTResourceManager.getFont("Segoe UI", 11, SWT.NORMAL));
-		button.setSelection(true);
-		button.setText("1.73");
+		rbnTd175 = new Button(grpTargetDiameter, SWT.RADIO);
+		rbnTd175.setFont(SWTResourceManager.getFont("Segoe UI", 11, SWT.NORMAL));
+		rbnTd175.setSelection(true);
+		rbnTd175.setText("1.75");
 		
-		button_1 = new Button(grpTargetDiameter, SWT.RADIO);
-		button_1.setFont(SWTResourceManager.getFont("Segoe UI", 11, SWT.NORMAL));
-		button_1.setText("2.83");
+		rbnTd285 = new Button(grpTargetDiameter, SWT.RADIO);
+		rbnTd285.setFont(SWTResourceManager.getFont("Segoe UI", 11, SWT.NORMAL));
+		rbnTd285.setText("2.85");
 		
 		btnFeedback = new Button(this, SWT.CHECK);
-		btnFeedback.setSelection(true);
+		btnFeedback.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				if (!btnFeedback.getSelection()) {
+					lblFbCnt.setText("-");
+					lblFbPrevNudge.setText("-");
+				}
+			}
+		});
 		btnFeedback.setFont(SWTResourceManager.getFont("Segoe UI", 13, SWT.NORMAL));
 		FormData fd_btnFeedback = new FormData();
 		fd_btnFeedback.right = new FormAttachment(grpTargetDiameter, 108, SWT.RIGHT);
@@ -264,6 +275,26 @@ public class CoilMassPanel extends Group {
 		fd_btnFeedback.top = new FormAttachment(0, 183);
 		btnFeedback.setLayoutData(fd_btnFeedback);
 		btnFeedback.setText("Feedback");
+		
+		lblFbPrevNudge = new Label(this, SWT.NONE);
+		lblFbPrevNudge.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
+		lblFbPrevNudge.setText("-");
+		FormData fd_lblFbPrevNudge = new FormData();
+		fd_lblFbPrevNudge.bottom = new FormAttachment(grpTargetDiameter, -6);
+		fd_lblFbPrevNudge.top = new FormAttachment(btnResetCount, -15);
+		lblFbPrevNudge.setLayoutData(fd_lblFbPrevNudge);
+		
+		lblFbCnt = new Label(this, SWT.NONE);
+		lblFbCnt.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
+		fd_lblFbPrevNudge.right = new FormAttachment(lblFbCnt, 95);
+		fd_lblFbPrevNudge.left = new FormAttachment(lblFbCnt, 0, SWT.LEFT);
+		FormData fd_lblFbCnt = new FormData();
+		fd_lblFbCnt.bottom = new FormAttachment(lblFbPrevNudge, -6);
+		fd_lblFbCnt.top = new FormAttachment(btnResetCount, 0, SWT.TOP);
+		fd_lblFbCnt.right = new FormAttachment(btnResetCoil, 101, SWT.RIGHT);
+		fd_lblFbCnt.left = new FormAttachment(btnResetCoil, 6);
+		lblFbCnt.setLayoutData(fd_lblFbCnt);
+		lblFbCnt.setText("-");
 		
 		if (injector!=null) injector.injectMembers(this);
 
@@ -292,6 +323,8 @@ public class CoilMassPanel extends Group {
 			}
 		});
 		setDensity(config.cfplaDensity);
+		rbnTd175.setText(String.format("%.2f", config.fbTarget175));
+		rbnTd285.setText(String.format("%.2f", config.fbTarget285));
 	}
 	
 	@Subscribe
@@ -332,13 +365,21 @@ public class CoilMassPanel extends Group {
 	}
 	
 	public void doFeedback() {
-		float delta = diameter-1.73f;      //  FIXME
-		if (Math.abs(delta)<0.02) return;
-		if (delta>0.1f) delta=0.1f;
-		else if (delta<-0.1f) delta=-0.1f;
-		delta*=0.01;
-		refMotor.nudgeSpeed(delta);
-		log.info(""+delta);
+		float delta = 0;
+		if (rbnTd175.getSelection()) delta = diameter-config.fbTarget175;
+		else if (rbnTd285.getSelection()) delta = diameter-config.fbTarget285;		
+		if (Math.abs(delta)<config.fbDeadband) {
+			++fbCenterCount;
+		} else {
+			fbCenterCount=0;
+			if (delta>config.fbSpread) delta=config.fbSpread;
+			else if (delta<-config.fbSpread) delta=-config.fbSpread;
+			delta*=config.fbNudgeFactor;
+			refMotor.nudgeSpeed(delta);
+			lblFbPrevNudge.setText(String.format("%.4f", delta));
+			log.info(String.format("%.4f", delta));
+		}
+		lblFbCnt.setText(""+fbCenterCount);
 	}
 	
 	private void calcMass(float diameter) {
@@ -413,5 +454,4 @@ public class CoilMassPanel extends Group {
 	protected void checkSubclass() {
 		// Disable the check that prevents subclassing of SWT components
 	}
-
 }

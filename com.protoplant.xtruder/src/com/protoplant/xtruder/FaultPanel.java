@@ -72,7 +72,6 @@ public class FaultPanel extends Group {
 		btnHomer.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
 		btnHomer.setBounds(209, 60, 102, 28);
 		btnHomer.setText("Homer");
-		btnHomer.setSelection(true);
 		
 		if (injector!=null) injector.injectMembers(this);
 	}

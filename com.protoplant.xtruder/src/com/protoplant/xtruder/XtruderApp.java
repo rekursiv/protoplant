@@ -51,7 +51,7 @@ public class XtruderApp {
 		
 		// touchscreen is 1280 X 800
 		shell.setSize(1280, 800);
-		shell.setText("Protoplant Xtruder V1.6");
+		shell.setText("Protoplant Xtruder V1.7");
 		shell.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
 		Injector injector = Guice.createInjector(new XtruderModule());
