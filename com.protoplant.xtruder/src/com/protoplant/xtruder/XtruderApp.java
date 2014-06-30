@@ -15,7 +15,6 @@ public class XtruderApp {
 	
 	
 	public static void main(String[] args) {
-		runRemote();
 		System.getProperties().setProperty("java.util.logging.config.class", "util.logging.LogSetup");
 		XtruderApp instance = new XtruderApp();
 		instance.init();
@@ -49,12 +48,15 @@ public class XtruderApp {
 			shell.open();
 		}
 		
+
 		// ChalkElec touchscreen is 1280 X 800
 		shell.setSize(1280, 800);
+
 		// Dell touchscreen is 1600 X 900
 //		shell.setSize(1600, 900);
 		
-		shell.setText("Protoplant Xtruder V1.4");
+		shell.setText("Protoplant Xtruder V1.7");
+
 		shell.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
 		Injector injector = Guice.createInjector(new XtruderModule());
@@ -69,10 +71,10 @@ public class XtruderApp {
 		smc.initAllBoards();
 		
 		AudioManager am = injector.getInstance(AudioManager.class);
-		HopperAlarm hopperAlarm = injector.getInstance(HopperAlarm.class);
-
 		SerialPortManager spm = injector.getInstance(SerialPortManager.class);
 		spm.init();
+		DataLogger dl = injector.getInstance(DataLogger.class);
+		dl.init();
 
 		
 		shell.init();  // main loop
@@ -80,6 +82,7 @@ public class XtruderApp {
 		mpg.destroy();
 		spm.destroy();
 		am.destroy();
+		dl.destroy();
 
 	}
 

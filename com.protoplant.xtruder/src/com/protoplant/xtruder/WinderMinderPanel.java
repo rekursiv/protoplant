@@ -11,6 +11,8 @@ import com.google.inject.Injector;
 
 public class WinderMinderPanel extends MotorPanel implements Runnable {
 
+	private static final int pollPeriod = 200;
+	
 	private volatile boolean isMovingForward = true;
 	private volatile boolean isPolling = false;
 	private volatile boolean switchDetected = false;
@@ -34,7 +36,7 @@ public class WinderMinderPanel extends MotorPanel implements Runnable {
 	@Override
 	public void run() {
 		try {
-			Thread.sleep(200);
+			Thread.sleep(pollPeriod);
 		} catch (InterruptedException e) {
 			return;
 		}
@@ -62,27 +64,12 @@ public class WinderMinderPanel extends MotorPanel implements Runnable {
 		ArrayList<Integer> bytes = st.getStatus();
 		
 		if (!switchDetected && st.isSwitchOn(bytes)) {
-			log.info("SWITCH ON   "+st.toBinary(bytes.get(1).intValue()));
+//			log.info("SWITCH ON   "+st.toBinary(bytes.get(1).intValue()));
 			switchDetected = true;
 			isMovingForward = !isMovingForward;
 			setMotorSpeed();
 		} else if (switchDetected && !st.isSwitchOn(bytes)) {
-			log.info("SWITCH OFF  "+st.toBinary(bytes.get(1).intValue()));
-			switchDetected = false;
-		}
-	}
-	
-	private void TEST_pollMotorController() {
-		st.setCurBoardIndex(boardIndex);
-		ArrayList<Integer> bytes = st.getStatus();
-		
-		if (!switchDetected && st.isSwitchOn(bytes) && !st.isBusy(bytes)) {
-			log.info("SWITCH ON   "+st.toBinary(bytes.get(1).intValue()));
-			switchDetected = true;
-			isMovingForward = !isMovingForward;
-			setMotorSpeed();
-		} else if (switchDetected && !st.isSwitchOn(bytes) && st.isBusy(bytes)) {
-			log.info("SWITCH OFF  "+st.toBinary(bytes.get(1).intValue()));
+//			log.info("SWITCH OFF  "+st.toBinary(bytes.get(1).intValue()));
 			switchDetected = false;
 		}
 	}
@@ -105,6 +92,7 @@ public class WinderMinderPanel extends MotorPanel implements Runnable {
 			st.setCurBoardIndex(boardIndex);
 			int speed = speedMotorUnits;
 			if (!isMovingForward) speed = -speed;
+//			log.info(""+speed);
 			st.run(speed);
 		}
 	}

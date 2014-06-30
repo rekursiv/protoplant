@@ -24,16 +24,16 @@ public class PiGpio implements GpioPinListenerDigital, Runnable {
 	protected GpioPinDigitalInput stepA=null;
 	protected GpioPinDigitalInput stepB=null;
 	protected GpioPinDigitalInput laserOver=null;
+	protected GpioPinDigitalInput laserUnder=null;
 	
 	private volatile Thread thread = null;
 	protected volatile long prevStepTime = 0;
 	protected volatile int curStep = 0;
-//	protected int prevStep = 0;
 	private volatile boolean isActive = true;
 	
 	private Logger log;
 	private EventBus eb;
-	private GpioPinDigitalInput laserUnder;
+
 	
 	
 	@Inject
@@ -84,7 +84,6 @@ public class PiGpio implements GpioPinListenerDigital, Runnable {
 	public void destroy() {
 		isActive  = false;
 		if (thread!=null) thread.interrupt();
-//		try {Thread.sleep(200);} catch (InterruptedException e) {}  // give things a chance to shut down
 		if (gpio!=null) gpio.shutdown();
 		log.info("");
 	}

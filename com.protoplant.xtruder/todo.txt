@@ -1,27 +1,33 @@
 
 
-try to fix stepperature bug - error adds up after long time of not touching
 
-winder minder:
-  fix switch bounce issue
 
-log data (diameter, pressure, etc)
+---------------------
 
+backup config
+
+run on startup
+
+===
+
+
+
+USB scale
+  log data
+  auto-adjust density
 
 
 
 =====
 
-msp430 analog input to hopper sensor
-
-alarms/warnings - text to speech
-  fix memory issue - load on demand??
-
 fix OS so xtruder only loads one instance
 
 =======
 
-laser flaw detection
+winder minder:
+  fix switch bounce issue
+
+try to fix stepperature bug - error adds up after long time of not touching
 
 ---
 
@@ -30,4 +36,4 @@ rate of indicator data tx = 10hz
 density:
   pcabs = 1.13
   hitemp pla = 1.28
-
+  CFPLA = 1.12

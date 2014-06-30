@@ -29,6 +29,8 @@ public class FaultPanel extends Group {
 	private int overCount = 0;
 	private int underCount = 0;
 	private AudioManager am;
+	private DataLogger dl;
+	private Button btnHomer;
 
 	public FaultPanel(Composite parent, Injector injector) {
 		super(parent, SWT.NONE);
@@ -43,7 +45,7 @@ public class FaultPanel extends Group {
 			}
 		});
 		btnReset.setFont(SWTResourceManager.getFont("Segoe UI", 15, SWT.NORMAL));
-		btnReset.setBounds(204, 21, 92, 60);
+		btnReset.setBounds(219, 10, 92, 38);
 		btnReset.setText("Reset");
 		
 		lblOverMarker = new Label(this, SWT.NONE);
@@ -66,12 +68,18 @@ public class FaultPanel extends Group {
 		lblUnder.setBounds(102, 58, 75, 33);
 		lblUnder.setText("0");
 		
+		btnHomer = new Button(this, SWT.CHECK);
+		btnHomer.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
+		btnHomer.setBounds(209, 60, 102, 28);
+		btnHomer.setText("Homer");
+		
 		if (injector!=null) injector.injectMembers(this);
 	}
 	
 	@Inject
-	public void inject(Logger log, AudioManager am) {
+	public void inject(Logger log, DataLogger dl, AudioManager am) {
 		this.log = log;
+		this.dl = dl;
 		this.am = am;
 	}
 	
@@ -84,7 +92,13 @@ public class FaultPanel extends Group {
 			++underCount;
 		}
 		updateDisplay();
-		am.playClip("doh");
+		dl.write("LaserFault", ""+underCount, ""+overCount);
+		if (btnHomer.getSelection()) am.playClip("doh");
+	}
+	
+	@Subscribe
+	public void onCoilReset(CoilResetEvent event) {
+		reset();
 	}
 	
 	private void updateDisplay() {
@@ -93,6 +107,7 @@ public class FaultPanel extends Group {
 	}
 	
 	private void reset() {
+		dl.write("LaserFault", "RESET", ""+underCount, ""+overCount);
 		overCount = 0;
 		underCount = 0;
 		updateDisplay();
