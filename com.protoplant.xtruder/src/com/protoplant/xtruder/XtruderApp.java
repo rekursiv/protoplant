@@ -49,8 +49,11 @@ public class XtruderApp {
 			shell.open();
 		}
 		
-		// touchscreen is 1280 X 800
+		// ChalkElec touchscreen is 1280 X 800
 		shell.setSize(1280, 800);
+		// Dell touchscreen is 1600 X 900
+//		shell.setSize(1600, 900);
+		
 		shell.setText("Protoplant Xtruder V1.4");
 		shell.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
