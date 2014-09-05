@@ -80,7 +80,7 @@ public class MotorPanel extends Group {
 			}
 		});
 		btnStop.setBounds(10, 33, 75, 51);
-		btnStop.setText("Stop");
+		btnStop.setText("Reset");
 		btnStop.setFont(SWTResourceManager.getFont("Segoe UI", 15, SWT.NORMAL));
 		
 		btnRun = new Button(this, SWT.NONE);
@@ -210,6 +210,7 @@ public class MotorPanel extends Group {
 	public void start(boolean sendChangeEvent) {
 		isRunning = true;
 		lblSpeed.setBackground(SWTResourceManager.getColor(runColor));
+		btnStop.setText("Stop");
 		startMotor();
 		if (sendChangeEvent) eb.post(new MotorStateChangeEvent(this, MotorState.RUN));
 	}
@@ -224,10 +225,20 @@ public class MotorPanel extends Group {
 	}
 	
 	public void stop(boolean sendChangeEvent) {
-		isRunning = false;
-		lblSpeed.setBackground(SWTResourceManager.getColor(stopColor));
-		stopMotor();
-		if (sendChangeEvent) eb.post(new MotorStateChangeEvent(this, MotorState.STOP));
+		if (isRunning) {
+			isRunning = false;
+			lblSpeed.setBackground(SWTResourceManager.getColor(stopColor));
+			btnStop.setText("Reset");
+			stopMotor();
+			if (sendChangeEvent) eb.post(new MotorStateChangeEvent(this, MotorState.STOP));
+		} else {
+			reset();
+		}
+	}
+	
+	public void reset() {
+		st.setCurBoardIndex(boardIndex);
+		st.initCurrentBoard();
 	}
 	
 	public void stopMotor() {

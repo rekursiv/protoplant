@@ -56,7 +56,7 @@ public class XtruderApp {
 		// Dell touchscreen is 1600 X 900
 //		shell.setSize(1600, 900);
 		
-		shell.setText("Protoplant Xtruder V1.7");
+		shell.setText("Protoplant Xtruder V1.8");
 
 		shell.setLayout(new FillLayout(SWT.HORIZONTAL));
 		

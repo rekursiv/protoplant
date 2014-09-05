@@ -136,7 +136,7 @@ public class ControlPanel extends Composite {
 				st.initAllBoards();
 			}
 		});
-		btnReinitMotors.setText("Re-Init Motors");
+		btnReinitMotors.setText("Reset All");
 		btnReinitMotors.setFont(SWTResourceManager.getFont("Segoe UI", 15, SWT.NORMAL));
 		
 		btnTest = new Button(grpGlobalControls, SWT.NONE);

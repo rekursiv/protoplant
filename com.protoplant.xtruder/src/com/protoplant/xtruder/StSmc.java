@@ -71,8 +71,16 @@ public class StSmc {
 			setDefaults();
 			resetErrorFlags();
 		}
-		curBoardIndex = 0;
+		curBoardIndex=0;
 		fixBrokenL6482();
+	}
+	
+	public void initCurrentBoard() {
+		if (curBoardIndex!=0) {  // can't reset board 0
+			resetDevice();
+			setDefaults();
+			resetErrorFlags();
+		}
 	}
 	
 	public void setDefaults() {
