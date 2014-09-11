@@ -21,5 +21,6 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="C:/projects/javalib/joda-time-2.3/joda-time-2.3.jar"/>
 	<classpathentry kind="lib" path="C:/projects/javalib/opencsv-2.3/deploy/opencsv-2.3.jar"/>
+	<classpathentry kind="lib" path="C:/projects/javalib/hidapi-1.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

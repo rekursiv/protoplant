@@ -18,18 +18,18 @@ import org.eclipse.swt.events.SelectionEvent;
 
 public class DataDisplayPanel extends Group {
 
-	private Logger log;
-	private Label lblData;
-	private String label;
-	private int index;
-	private boolean signed;
-	private XtruderConfig config;
-	private Label lblPrevMax;
-	private Label lblPrevMin;
-	private Button btnReset;
-	private DataLogger dl;
-	private Label lblMax;
-	private Label lblMin;
+	protected Logger log;
+	protected Label lblData;
+	protected String label;
+	protected int index;
+	protected boolean signed;
+	protected XtruderConfig config;
+	protected Label lblPrevMax;
+	protected Label lblPrevMin;
+	protected Button btnReset;
+	protected DataLogger dl;
+	protected Label lblMax;
+	protected Label lblMin;
 	protected float curValue;
 	protected float prevValue;
 	protected float minValue;
@@ -147,12 +147,12 @@ public class DataDisplayPanel extends Group {
 	public void reset() {
 		dl.write(label, "RESET", String.format("%.2f", minValue), String.format("%.2f", maxValue));
 		lblPrevMin.setText(lblMin.getText());
-		lblMin.setText("MIN");
-		minValue = 99999;
+		minValue = curValue;
+		lblMin.setText(String.format("%.2f", minValue));
 		
 		lblPrevMax.setText(lblMax.getText());
-		lblMax.setText("MAX");
-		maxValue = -99999;
+		maxValue = curValue;
+		lblMax.setText(String.format("%.2f", maxValue));
 	}
 	
 	@Override

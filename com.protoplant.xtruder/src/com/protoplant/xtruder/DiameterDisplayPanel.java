@@ -1,6 +1,7 @@
 package com.protoplant.xtruder;
 
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Injector;
@@ -10,22 +11,33 @@ public class DiameterDisplayPanel extends DataDisplayPanel {
 	private CoilMassPanel coilPanel;
 
 	public DiameterDisplayPanel(Composite parent, Injector injector, CoilMassPanel coilPanel) {
-		super(parent, injector, "Diameter", 0, true);
+		super(parent, injector, "Diameter", 0, false);
 		this.coilPanel = coilPanel;
 	}
 
-	@Override
-	protected void updateValues() {
-		super.updateValues();
-		if (coilPanel!=null) coilPanel.setDiameter(curValue);
+
+	
+	@Subscribe
+	public void onData(final IndicatorDataEvent evt) {
+		Display.getDefault().asyncExec(new Runnable() {
+			@Override
+			public void run() {
+				curValue = evt.getCur();
+				if (coilPanel!=null) coilPanel.setDiameter(curValue);
+				if (evt.getMax()>maxValue) {
+					maxValue = evt.getMax();
+					lblMax.setText(String.format("%.2f", maxValue));
+				}
+				if (evt.getMin()<minValue) {
+					minValue = evt.getMin();
+					lblMin.setText(String.format("%.2f", minValue));
+				}
+				lblData.setText(String.format("%.2f", curValue)+" "+config.displays[index].unit);
+				logData();
+			}
+		});
 	}
 	
-	
-//	@Subscribe
-//	public void onMpgStepEvent(MpgStepEvent event) {			////////////////////////    TEST
-//		calcRunningAverage((float)event.getStep()*0.01f);
-//		updateValues();
-//	}
 	
 	
 	@Override

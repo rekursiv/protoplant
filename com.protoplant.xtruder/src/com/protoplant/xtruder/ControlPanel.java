@@ -37,7 +37,7 @@ public class ControlPanel extends Composite {
 	
 	private StSmc st;
 	private DataDisplayPanel pnlDiameter;
-	private DataDisplayPanel data2;
+	private DataDisplayPanel pnlPressure;
 	private FaultPanel fault;
 
 	private Logger log;
@@ -80,11 +80,13 @@ public class ControlPanel extends Composite {
 		coilMass.setBounds(739, 10, 459, 327);
 
 		pnlDiameter = new DiameterDisplayPanel(this, injector, coilMass);
-		pnlDiameter.setBounds(373, 121, 350, 105);
-		data2 = new DataDisplayPanel(this, injector, "Pressure", 1, false);
-		data2.setBounds(10, 10, 350, 105);
-		fault = new FaultPanel(this, injector);
-		fault.setBounds(373, 10, 350, 105);
+//		pnlDiameter.setBounds(373, 121, 350, 105);
+		pnlDiameter.setBounds(373, 10, 350, 105);
+		
+		pnlPressure = new PressureDisplayPanel(this, injector);
+		pnlPressure.setBounds(10, 10, 350, 105);
+//		fault = new FaultPanel(this, injector);
+//		fault.setBounds(373, 10, 350, 105);
 		
 		/*
 		

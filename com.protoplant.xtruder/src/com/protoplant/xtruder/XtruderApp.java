@@ -11,6 +11,7 @@ import com.google.inject.Injector;
 import com.protoplant.xtruder.audio.AudioManager;
 import com.protoplant.xtruder.audio.HopperAlarm;
 
+
 public class XtruderApp {
 	
 	
@@ -51,12 +52,12 @@ public class XtruderApp {
 		
 
 		// ChalkElec touchscreen is 1280 X 800
-		shell.setSize(1280, 800);
+//		shell.setSize(1280, 800);
 
 		// Dell touchscreen is 1600 X 900
-//		shell.setSize(1600, 900);
+		shell.setSize(1600, 900);
 		
-		shell.setText("Protoplant Xtruder V1.8");
+		shell.setText("Protoplant Xtruder V1.9");
 
 		shell.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
@@ -72,16 +73,21 @@ public class XtruderApp {
 		smc.initAllBoards();
 		
 		AudioManager am = injector.getInstance(AudioManager.class);
-		SerialPortManager spm = injector.getInstance(SerialPortManager.class);
-		spm.init();
+//		SerialPortManager spm = injector.getInstance(SerialPortManager.class);
+//		spm.init();
 		DataLogger dl = injector.getInstance(DataLogger.class);
 		dl.init();
+		
+		UsbManager usb = injector.getInstance(UsbManager.class);
+		usb.init();
 
 		
 		shell.init();  // main loop
 		
+		usb.release();
+		
 		mpg.destroy();
-		spm.destroy();
+//		spm.destroy();
 		am.destroy();
 		dl.destroy();
 
