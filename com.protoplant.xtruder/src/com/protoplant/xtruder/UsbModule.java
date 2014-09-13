@@ -1,6 +1,7 @@
 package com.protoplant.xtruder;
 
 import java.io.IOException;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.xml.bind.DatatypeConverter;
@@ -40,6 +41,7 @@ public class UsbModule {
 		disconnect();
         try {
 			dev = HIDManager.getInstance().openById(vid, pid, null);
+			if (dev==null) return;
 			dev.disableBlocking();
 			log.info("Connected");
 		} catch (HIDDeviceNotFoundException e) {
@@ -68,6 +70,7 @@ public class UsbModule {
 			try {
 				writeUsb();
 			} catch (IOException e) {
+				log.log(Level.WARNING, "", e);
 				disconnect();
 			}
 		}
@@ -78,6 +81,7 @@ public class UsbModule {
 			try {
 				readUsb();
 			} catch (IOException e) {
+				log.log(Level.WARNING, "", e);
 				disconnect();
 			}
 		}
