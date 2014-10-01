@@ -11,6 +11,8 @@ import com.google.inject.Singleton;
 @Singleton
 public class AudioManager {
 	
+	// online text to speech:   http://soundoftext.com/
+	
 	Map<String, AudioClip> clipMap = new HashMap<String, AudioClip>();
 	private Logger log;
 	
@@ -18,15 +20,12 @@ public class AudioManager {
 	public AudioManager(Logger log) {
 		this.log = log;
 		init();
-	}	
-	
+	}
+
 	public void init() {
-		addClip("200g");
-		addClip("220g");
-		addClip("240g");
-		addClip("950g");
-		addClip("970g");
-		addClip("990g");
+		addClip("50gtg");
+		addClip("30gtg");
+		addClip("10gtg");
 		addClip("5");
 		addClip("4");
 		addClip("3");
@@ -36,7 +35,7 @@ public class AudioManager {
 		addClip("starvin");
 		addClip("doh");
 	}
-	
+
 	public void addClip(String name) {
 		AudioClip clip = new AudioClip(name+".wav");
 		clipMap.put(name, clip);

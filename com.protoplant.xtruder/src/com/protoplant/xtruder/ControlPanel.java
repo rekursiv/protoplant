@@ -9,6 +9,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.MessageBox;
 
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
@@ -77,7 +78,7 @@ public class ControlPanel extends Composite {
 		linkMotor2_4.link();
 		
 		coilMass = new CoilMassPanel(this, injector, motor3);
-		coilMass.setBounds(739, 10, 459, 327);
+		coilMass.setBounds(739, 10, 641, 327);
 
 		pnlDiameter = new DiameterDisplayPanel(this, injector, coilMass);
 		pnlDiameter.setBounds(373, 121, 350, 105);
@@ -138,7 +139,8 @@ public class ControlPanel extends Composite {
 		});
 		btnReinitMotors.setText("Reset All");
 		btnReinitMotors.setFont(SWTResourceManager.getFont("Segoe UI", 15, SWT.NORMAL));
-		
+
+/*		
 		btnTest = new Button(grpGlobalControls, SWT.NONE);
 		btnTest.setBounds(541, 33, 78, 58);
 		btnTest.addSelectionListener(new SelectionAdapter() {
@@ -149,15 +151,22 @@ public class ControlPanel extends Composite {
 		});
 		btnTest.setFont(SWTResourceManager.getFont("Segoe UI", 15, SWT.NORMAL));
 		btnTest.setText("Test");
+*/
 		
 		btnExit = new Button(grpGlobalControls, SWT.NONE);
 		btnExit.setBounds(625, 33, 78, 58);
 		btnExit.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				stopAll();
-				winderMinder.destroy();
-				getShell().dispose();
+				MessageBox mb = new MessageBox(getShell(), SWT.ICON_WARNING | SWT.YES | SWT.NO);
+				mb.setMessage("Really exit?");
+				int response = mb.open();
+				log.info(""+response);
+				if (response==SWT.YES) {
+					stopAll();
+					winderMinder.destroy();
+					getShell().dispose();					
+				}
 			}
 		});
 		btnExit.setText("Exit");
@@ -176,6 +185,7 @@ public class ControlPanel extends Composite {
 				io.simulateStep(evt.count);
 			}
 		});
+
 
 		if (injector!=null) injector.injectMembers(this);
 	}

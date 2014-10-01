@@ -31,6 +31,7 @@ import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.wb.swt.SWTResourceManager;
 
 import util.config.ConfigManager;
+
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.ModifyEvent;
@@ -51,6 +52,7 @@ public class CoilMassPanel extends Group {
 	private volatile float diameter=0;
 	private volatile float diameterUpdateCount=0;
 	private volatile int fbCenterCount=0;
+	private volatile int customMass=0;
 	
 	private Button rb250g;
 	private Button rb1kg;
@@ -76,6 +78,9 @@ public class CoilMassPanel extends Group {
 	private Button btnFeedback;
 	private Label lblFbPrevNudge;
 	private Label lblFbCnt;
+	private Button rb750g;
+	private Button rbcg;
+	private Spinner spnCustomMass;
 
 
 	public CoilMassPanel(Composite parent, Injector injector, MotorPanel refMotor) {   //  350 x 327
@@ -158,23 +163,15 @@ public class CoilMassPanel extends Group {
 		fd_grpMaterial.bottom = new FormAttachment(0, 295);
 		fd_grpMaterial.top = new FormAttachment(grpReset, 6);
 		fd_lblData.right = new FormAttachment(0, 180);
+		grpReset.setLayout(null);
 		FormData fd_grpReset = new FormData();
-		fd_grpReset.right = new FormAttachment(0, 165);
 		fd_grpReset.left = new FormAttachment(0, 13);
 		grpReset.setLayoutData(fd_grpReset);
-		FillLayout fl_grpReset = new FillLayout(SWT.HORIZONTAL);
-		fl_grpReset.marginWidth = 5;
-		fl_grpReset.spacing = 4;
-		grpReset.setLayout(fl_grpReset);
 		
 		rb250g = new Button(grpReset, SWT.RADIO);
-		rb250g.setSelection(true);
+		rb250g.setBounds(8, 15, 62, 57);
 		rb250g.setFont(SWTResourceManager.getFont("Segoe UI", 11, SWT.NORMAL));
 		rb250g.setText("250g");
-		
-		rb1kg = new Button(grpReset, SWT.RADIO);
-		rb1kg.setFont(SWTResourceManager.getFont("Segoe UI", 11, SWT.NORMAL));
-		rb1kg.setText("1kg");
 		
 		spnCount = new Spinner(this, SWT.BORDER);
 		spnCount.addSelectionListener(new SelectionAdapter() {
@@ -186,6 +183,22 @@ public class CoilMassPanel extends Group {
 
 		fd_grpReset.bottom = new FormAttachment(spnCount, 81, SWT.BOTTOM);
 		fd_grpReset.top = new FormAttachment(spnCount, 6);
+		
+		rb750g = new Button(grpReset, SWT.RADIO);
+		rb750g.setBounds(79, 15, 62, 57);
+		rb750g.setText("750g");
+		rb750g.setSelection(true);
+		rb750g.setFont(SWTResourceManager.getFont("Segoe UI", 11, SWT.NORMAL));
+		
+		rb1kg = new Button(grpReset, SWT.RADIO);
+		rb1kg.setBounds(152, 15, 77, 57);
+		rb1kg.setFont(SWTResourceManager.getFont("Segoe UI", 11, SWT.NORMAL));
+		rb1kg.setText("1000g");
+		
+		rbcg = new Button(grpReset, SWT.RADIO);
+		rbcg.setBounds(256, 15, 20, 57);
+
+		rbcg.setFont(SWTResourceManager.getFont("Segoe UI", 11, SWT.NORMAL));
 		spnCount.setFont(SWTResourceManager.getFont("Segoe UI", 24, SWT.NORMAL));
 		spnCount.setMaximum(1000);
 		spnCount.setMinimum(1);
@@ -238,14 +251,29 @@ public class CoilMassPanel extends Group {
 		btnResetCount.setLayoutData(fd_btnResetCount);
 		
 		grpTargetDiameter = new Group(this, SWT.NONE);
-		fd_btnResetMass.right = new FormAttachment(grpTargetDiameter, 0, SWT.RIGHT);
+		fd_grpReset.right = new FormAttachment(grpTargetDiameter, -6);
+		fd_btnResetMass.right = new FormAttachment(100, -234);
 		grpTargetDiameter.setText("Target Diameter");
 		grpTargetDiameter.setLayout(new FillLayout(SWT.HORIZONTAL));
 		FormData fd_grpTargetDiameter = new FormData();
-		fd_grpTargetDiameter.bottom = new FormAttachment(grpMaterial, -6);
-		fd_grpTargetDiameter.right = new FormAttachment(0, 340);
-		fd_grpTargetDiameter.top = new FormAttachment(spnCount, 6);
-		fd_grpTargetDiameter.left = new FormAttachment(spnCount);
+		fd_grpTargetDiameter.bottom = new FormAttachment(grpReset, 75);
+		fd_grpTargetDiameter.top = new FormAttachment(grpReset, 0, SWT.TOP);
+		
+		spnCustomMass = new Spinner(grpReset, SWT.BORDER);
+		spnCustomMass.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				customMass=spnCustomMass.getSelection();
+				log.info(""+customMass);
+			}
+		});
+		spnCustomMass.setBounds(282, 15, 136, 57);
+		spnCustomMass.setMaximum(300);
+		spnCustomMass.setMinimum(50);
+		spnCustomMass.setSelection(100);
+		spnCustomMass.setFont(SWTResourceManager.getFont("Segoe UI", 16, SWT.NORMAL));
+		fd_grpTargetDiameter.left = new FormAttachment(0, 445);
+		fd_grpTargetDiameter.right = new FormAttachment(0, 615);
 		grpTargetDiameter.setLayoutData(fd_grpTargetDiameter);
 		
 		rbnTd175 = new Button(grpTargetDiameter, SWT.RADIO);
@@ -269,14 +297,14 @@ public class CoilMassPanel extends Group {
 		});
 		btnFeedback.setFont(SWTResourceManager.getFont("Segoe UI", 13, SWT.NORMAL));
 		FormData fd_btnFeedback = new FormData();
-		fd_btnFeedback.right = new FormAttachment(grpTargetDiameter, 108, SWT.RIGHT);
-		fd_btnFeedback.left = new FormAttachment(grpTargetDiameter, 6);
-		fd_btnFeedback.bottom = new FormAttachment(0, 205);
-		fd_btnFeedback.top = new FormAttachment(0, 183);
+		fd_btnFeedback.right = new FormAttachment(100, -250);
+		fd_btnFeedback.left = new FormAttachment(100, -349);
 		btnFeedback.setLayoutData(fd_btnFeedback);
 		btnFeedback.setText("Feedback");
 		
 		lblFbPrevNudge = new Label(this, SWT.NONE);
+		fd_btnFeedback.top = new FormAttachment(lblFbPrevNudge, -22, SWT.TOP);
+		fd_btnFeedback.bottom = new FormAttachment(lblFbPrevNudge);
 		lblFbPrevNudge.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
 		lblFbPrevNudge.setText("-");
 		FormData fd_lblFbPrevNudge = new FormData();
@@ -325,6 +353,7 @@ public class CoilMassPanel extends Group {
 		setDensity(config.cfplaDensity);
 		rbnTd175.setText(String.format("%.2f", config.fbTarget175));
 		rbnTd285.setText(String.format("%.2f", config.fbTarget285));
+		customMass=spnCustomMass.getSelection();
 	}
 	
 	@Subscribe
@@ -338,6 +367,14 @@ public class CoilMassPanel extends Group {
 			}
 		}
 	}
+	
+
+//	@Subscribe  // for testing 
+//	public void onMpgStepEvent(MpgStepEvent event) {
+//		int step = event.getStep();
+//		isMotorRunning=true;
+//		setDiameter(2.2f);
+//	}
 	
 	public void reloadConfig() {
 		config = cfgMgr.load();
@@ -394,11 +431,19 @@ public class CoilMassPanel extends Group {
 		
 		if (rb250g.getSelection()) {
 			if (grams>250) resetCoil(true);
-			updateAudio250g();
+			updateAudio(250);
+		}
+		else if (rb750g.getSelection()) {
+			if (grams>750) resetCoil(true);
+			updateAudio(750);
 		}
 		else if (rb1kg.getSelection()) {
 			if (grams>1000) resetCoil(true);
-			updateAudio1kg();
+			updateAudio(1000);
+		}
+		else if (rbcg.getSelection()) {
+			if (grams>customMass) resetCoil(true);
+			updateAudio(customMass);
 		}
 		
 		lblData.setText(String.format("%.2f g", grams));
@@ -417,27 +462,16 @@ public class CoilMassPanel extends Group {
 		}
 		eb.post(new CoilResetEvent(isWrapAround));
 	}
-	
-	private void updateAudio250g() {
-		if (checkpoint(200)) am.playClip("200g");
-		else if (checkpoint(220)) am.playClip("220g");
-		else if (checkpoint(240)) am.playClip("240g");
-		else if (checkpoint(245)) am.playClip("5");
-		else if (checkpoint(246)) am.playClip("4");
-		else if (checkpoint(247)) am.playClip("3");
-		else if (checkpoint(248)) am.playClip("2");
-		else if (checkpoint(249)) am.playClip("1");
-	}
 
-	private void updateAudio1kg() {
-		if (checkpoint(950)) am.playClip("950g");   
-		else if (checkpoint(970)) am.playClip("970g");
-		else if (checkpoint(990)) am.playClip("990g");
-		else if (checkpoint(995)) am.playClip("5");
-		else if (checkpoint(996)) am.playClip("4");
-		else if (checkpoint(997)) am.playClip("3");
-		else if (checkpoint(998)) am.playClip("2");
-		else if (checkpoint(999)) am.playClip("1");
+	private void updateAudio(int total) {
+		if (checkpoint(total-50)) am.playClip("50gtg");
+		else if (checkpoint(total-30)) am.playClip("30gtg");
+		else if (checkpoint(total-10)) am.playClip("10gtg");
+		else if (checkpoint(total-5)) am.playClip("5");
+		else if (checkpoint(total-4)) am.playClip("4");
+		else if (checkpoint(total-3)) am.playClip("3");
+		else if (checkpoint(total-2)) am.playClip("2");
+		else if (checkpoint(total-1)) am.playClip("1");
 	}
 	
 	private boolean checkpoint(float ref) {
