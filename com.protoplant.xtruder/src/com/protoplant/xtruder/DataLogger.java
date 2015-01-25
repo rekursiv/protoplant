@@ -2,7 +2,6 @@ package com.protoplant.xtruder;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -31,10 +30,15 @@ public class DataLogger {
 		try {
 			writer = new CSVWriter(new FileWriter("data/"+getTimeStamp()+".csv"), ',');
 		} catch (IOException e) {
-			log.log(Level.WARNING, "", e);
+			log.log(Level.WARNING, "Error creating data file", e);
+			return;
+		}
+		if (writer==null) {
+			log.warning("data writer is null");
 			return;
 		}
 		writer.writeNext(new String[]{"Timestamp", "Type", "Data1", "Data2", "Data3"});
+		if (writer.checkError()) log.warning("Error writing to data file");
 	}
 	
 	public void destroy() {

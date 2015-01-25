@@ -9,7 +9,6 @@ import org.eclipse.swt.layout.FillLayout;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.protoplant.xtruder.audio.AudioManager;
-import com.protoplant.xtruder.audio.HopperAlarm;
 
 public class XtruderApp {
 	
@@ -56,7 +55,7 @@ public class XtruderApp {
 		// Dell touchscreen is 1600 X 900
 		shell.setSize(1600, 900);
 		
-		shell.setText("Protoplant Xtruder V1.9");
+		shell.setText("Protoplant Xtruder V1.91");
 
 		shell.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
